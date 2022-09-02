@@ -298,36 +298,8 @@ $whatsapp_user_count = DB::table('whatsapp_cloud_users')
             }
           }
 
-           else if(trim(strtolower($message)) == "shortcut" || trim($message) == "10")
-          {
-            if($last_message_out_count < 1)
-            {
-              $this->SendTextMessage($messagesRes->shortcutKeys($phone, $name, $message_id), $phone, false);
-            }
-            else if($last_message_out->message != $messagesRes->shortcutKeys($phone, $name, $message_id))
-            {
-              $this->SendTextMessage($messagesRes->shortcutKeys($phone, $name, $message_id), $phone, false);
-            }
-          }
-
-          else if(trim($message) == "1" || trim(strtolower($message)) == "laundry")
-          {
-            if(!$alreadyReplied)
-            {
-              $this->SendTextMessage($messagesRes->laundryService($phone, $name, $message_id), $phone, true);
-            }
-          }
 
           //Track laundry --
-                    else if(trim(strtolower($message)) == "2" || trim(strtolower($message)) == "track")
-                    {
-                      $msg = trim(strtolower($message));
-                      if(!$alreadyReplied)
-                      {
-                        $this->SendTextMessage($messagesRes->trackLaundry($phone, $name, $message_id, $msg), $phone, false);
-                      }
-                    }
-
                     else if($last_message_out->message == "Please enter your laundry tracking ID" && $message != "2" && strtolower($message) != "track")
                     {
                       $msg = trim(strtolower($message));
@@ -338,8 +310,9 @@ $whatsapp_user_count = DB::table('whatsapp_cloud_users')
                     }
           //Track laundry -->
 
+
           //airtime vtu --
-                    else if(trim(strtolower($message)) == "5" || trim(strtolower($message)) == "airtime")
+                    else if(str_contains($last_message_out->message, "Enter a number from the list of networks below") && $last_message_in->message != "5" && $last_message_in->message != "airtime")
                     {
                       $msg = trim(strtolower($message));
                       if(!$alreadyReplied)
@@ -347,21 +320,12 @@ $whatsapp_user_count = DB::table('whatsapp_cloud_users')
                         $this->SendTextMessage($messagesRes->buyAirtimeVTU($phone, $name, $message_id, $msg), $phone, false);
                       }
                     }
-
-                    else if($last_message_out->message == "Enter a number from the list of networks below" && $last_message_in->message != "5" && $last_message_in->message != "airtime")
-                    {
-                      $msg = trim(strtolower($message));
-                      if(!$alreadyReplied)
-                      {
-                        $this->SendTextMessage($messagesRes->trackLaundry($phone, $name, $message_id, $msg), $phone, false);
-                      }
-                    }
                     else if(str_contains($last_message_out->message, "VTU*. Please, enter amount"))
                     {
                       $msg = trim(strtolower($message));
                       if(!$alreadyReplied)
                       {
-                        $this->SendTextMessage($messagesRes->trackLaundry($phone, $name, $message_id, $msg), $phone, false);
+                        $this->SendTextMessage($messagesRes->buyAirtimeVTU($phone, $name, $message_id, $msg), $phone, false);
                       }
                     }
                     else if(str_contains($last_message_out->message, " or enter phone number of beneficiary for airtime VTU"))
@@ -369,7 +333,7 @@ $whatsapp_user_count = DB::table('whatsapp_cloud_users')
                       $msg = trim(strtolower($message));
                       if(!$alreadyReplied)
                       {
-                        $this->SendTextMessage($messagesRes->trackLaundry($phone, $name, $message_id, $msg), $phone, false);
+                        $this->SendTextMessage($messagesRes->buyAirtimeVTU($phone, $name, $message_id, $msg), $phone, false);
                       }
                     }
                     else if(str_contains($last_message_out->message, "You are about to send airtime") && $last_message_in->message == "1")
@@ -377,11 +341,11 @@ $whatsapp_user_count = DB::table('whatsapp_cloud_users')
                       $msg = trim(strtolower($message));
                       if(!$alreadyReplied)
                       {
-                        $this->SendTextMessage($messagesRes->trackLaundry($phone, $name, $message_id, $msg), $phone, false);
+                        $this->SendTextMessage($messagesRes->buyAirtimeVTU($phone, $name, $message_id, $msg), $phone, false);
                       }
                     }
-
           //airtime vtu -->
+
 
           else if(str_contains(strtolower($message), 'thanks') || str_contains(strtolower($message), 'thank you') || str_contains(strtolower($message), 'thank'))
           {
@@ -391,6 +355,39 @@ $whatsapp_user_count = DB::table('whatsapp_cloud_users')
             }
           }
 
+        else if(trim($message) == "1" || trim(strtolower($message)) == "laundry")
+          {
+            if(!$alreadyReplied)
+            {
+              $this->SendTextMessage($messagesRes->laundryService($phone, $name, $message_id), $phone, true);
+            }
+          }
+
+          else if(trim(strtolower($message)) == "2" || trim(strtolower($message)) == "track")
+                    {
+                      $msg = trim(strtolower($message));
+                      if(!$alreadyReplied)
+                      {
+                        $this->SendTextMessage($messagesRes->trackLaundry($phone, $name, $message_id, $msg), $phone, false);
+                      }
+                    }
+
+           else if(trim(strtolower($message)) == "5" || trim(strtolower($message)) == "airtime")
+                    {
+                      $msg = trim(strtolower($message));
+                      if(!$alreadyReplied)
+                      {
+                        $this->SendTextMessage($messagesRes->buyAirtimeVTU($phone, $name, $message_id, $msg), $phone, false);
+                      }
+                    }
+
+            else if(trim(strtolower($message)) == "shortcut" || trim($message) == "10")
+          {
+            if(!$alreadyReplied)
+            {
+              $this->SendTextMessage($messagesRes->shortcutKeys($phone, $name, $message_id), $phone, false);
+            }
+          }
           else{
             if(!$alreadyReplied)
             {

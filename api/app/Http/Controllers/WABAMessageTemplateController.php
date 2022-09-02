@@ -14,6 +14,25 @@ use App\Http\Controllers\MailerController ;
 class WABAMessageTemplateController extends Controller
 {
 
+    public function checkForRepetition($message, $phone)
+    {
+            $last_message_out = DB::table('whatsapp_cloud_messages')
+            ->Where('phone', $phone)
+            ->Where('message_type', 'outbound')
+            ->orderBy('id', 'desc')
+            ->first();
+            if($last_message_out->message != $message)
+            {
+                return $message;
+            }
+            else
+            {
+                return null;
+            }
+
+    }
+
+
   public function buyAirtimeVtuApi($beneficiary, $amount, $network, $token)
   {
 
@@ -24,6 +43,21 @@ class WABAMessageTemplateController extends Controller
           'token' => $token
       ];
 
+      //last vtu order
+      $pending_vtu = DB::table('whatsapp_vtu')
+      ->Where('beneficiary', $beneficiary)
+      ->Where('status', 0)
+      ->orderBy('id', 'desc')
+      ->first();
+
+      //delete other pending orders
+      DB::table('whatsapp_vtu')
+      ->Where('status', 0)
+      ->Where('id', '!=', $pending_vtu->id)
+      ->delete();
+//return "text test";
+if($pending_vtu->status == 0)
+{
 $url = "https://api.topupearn.com/api/v1/recharge/buy_airtime";
       // Initializes a new cURL session
       $curl = curl_init($url);
@@ -45,17 +79,21 @@ $url = "https://api.topupearn.com/api/v1/recharge/buy_airtime";
       // Close cURL session
       curl_close($curl);
 
-      if($json_obj == null){
-          return "Sorry, we are unable to complete your transaction.";
-      }
+      if($json_obj->status == 1){
 
-      else if($json_obj->status == 0 ?? null){
-          //$send_mail = $this->sendMail("WABA Error", $this->email, "no_reply@topupearn.com", $json_obj->error->message);
-          return $json_obj->message;
+           DB::update('update whatsapp_vtu set status = ? where id = ? and beneficiary = ? limit 1',[1, $pending_vtu->id, $beneficiary]);
+           return $json_obj->message;
+
       }
       else{
-        return $json_obj->message;
+          $send_mail = $this->sendMail("WABA Error", $this->email, "no_reply@topupearn.com", $json_obj->error->message);
+          return $json_obj->message;
       }
+ }
+ else{
+     return "Transaction failed. Please try again.";
+ }
+
   }
 
   public function saveMessage($phone, $name, $message, $message_id)
@@ -70,18 +108,20 @@ $url = "https://api.topupearn.com/api/v1/recharge/buy_airtime";
 
   public function checkUserByphone($phone)
   {
-    $phone = ltrim($phone, $str[0]);
+      $phone = "+".$phone;
+    //$phone = ltrim($phone, $str[0]);
     $user = DB::table('users')
     ->Where('phone', $phone)
+    ->Where('status', 1)
     ->count();
 
     if($user > 0) return true;
-    else { return false; }
+    else return false;
   }
 
   public function getUserApiTokenByPhone($phone)
   {
-    $phone = ltrim($phone, $str[0]);
+    $phone = "+".$phone;
 
     $user = DB::table('users')
     ->Where('phone', $phone)
@@ -89,11 +129,12 @@ $url = "https://api.topupearn.com/api/v1/recharge/buy_airtime";
 
     //check if user has api
     $api = DB::table('login_logs')
-    ->Where('username', $user->username)
+    ->Where('id', $user->id)
     ->Where('login_type', "api")
-    ->Where('is_token_valid', 1)->first();
+    ->Where('is_token_valid', 1)
+    ->first();
 
-    if(!$api)
+    if($api == null || $api == "")
     {
       //Create api token
       $token = Str::random(80);
@@ -287,21 +328,32 @@ $url = "https://api.topupearn.com/api/v1/recharge/buy_airtime";
 
             if($msg == "5" || $msg == "airtime")
             {
-              $message = "Enter a number from the list of networks below";
-              $message = "\n1. *MTN*";
-              $message = "\n2. *GLO*";
-              $message = "\n3. *AIRTEL*";
-              $message = "\n4. *9MOBILE*";
+                if($this->checkUserByphone($phone))
+                {
+                      $message = "Enter a number from the list of networks below";
+                      $message .= "\n1. *MTN*";
+                      $message .= "\n2. *GLO*";
+                      $message .= "\n3. *AIRTEL*";
+                      $message .= "\n4. *9MOBILE*";
+                }
+                else
+                {
+
+
+                   $message = $this->noTopupearnAccount($phone, $name, $message_id);
+                }
+
+
             }
 
-            if($last_message_out->message == "Enter a number from the list of networks below" && $last_message_in->message != "5" && $last_message_in->message != "airtime")
+            if(str_contains($last_message_out->message, "Enter a number from the list of networks below") && $last_message_in->message != "5" && $last_message_in->message != "airtime")
             {
+                $network = "";
               if(trim($last_message_in->message) == "1") $network = "MTN";
               else if(trim($last_message_in->message) == "2") $network = "GLO";
               else if(trim($last_message_in->message) == "3") $network = "AIRTEL";
               else if(trim($last_message_in->message) == "4") $network = "9MOBILE";
               //else return "You entered an invalid command";
-              $message = "You selected *".$network." VTU*. Please, enter amount";
 
 //insert order for whatsapp vtu
               DB::insert('insert into whatsapp_vtu (
@@ -310,6 +362,8 @@ $url = "https://api.topupearn.com/api/v1/recharge/buy_airtime";
               values (?, ?)', [
                   $phone, $network
               ]);
+
+              $message = "You selected *".$network." VTU*. Please, enter amount";
 
             }
 
@@ -330,6 +384,7 @@ $url = "https://api.topupearn.com/api/v1/recharge/buy_airtime";
         ->first();
 
     DB::update('update whatsapp_vtu set amount = ? where id = ?',[$amount, $pending_vtu->id]);
+
     $message = "Type *self* if you want to recharge ".$phone." or enter phone number of beneficiary for airtime VTU.";
   }
 }
@@ -351,10 +406,9 @@ else if(is_numeric($beneficiary))
       ->first();
 
   DB::update('update whatsapp_vtu set beneficiary = ? where id = ?',[$beneficiary, $pending_vtu->id]);
-
-$message = "You are about to send *".$pending_vtu->network."* VTU airtime of *".$pending_vtu->amount." NGN* to *".$beneficiary."*.\nEnter 1 to proceed, 2 to cancel\n";
-$message .= "1. Proceed";
-$message .= "2. Cancel";
+$message = "You are about to send airtime ( *".$pending_vtu->network."* VTU ) of *".$pending_vtu->amount." NGN* to *".$beneficiary."*.\nEnter 1 to proceed, 2 to cancel\n";
+$message .= "1. *Proceed*\n";
+$message .= "2. *Cancel*";
 }
 else if(trim(strtolower($beneficiary)) == "self")
 {
@@ -368,9 +422,9 @@ else if(trim(strtolower($beneficiary)) == "self")
       ->first();
 
   DB::update('update whatsapp_vtu set beneficiary = ? where id = ?',[$beneficiary, $pending_vtu->id]);
-$message = "You are about to send airtime (*".$pending_vtu->network."* VTU) of *".$pending_vtu->amount." NGN* to *".$beneficiary."*.\nEnter 1 to proceed, 2 to cancel\n";
-$message .= "1. Proceed";
-$message .= "2. Cancel";
+$message = "You are about to send airtime ( *".$pending_vtu->network."* VTU ) of *".$pending_vtu->amount." NGN* to *".$beneficiary."*.\nEnter 1 to proceed, 2 to cancel\n";
+$message .= "1. *Proceed*\n";
+$message .= "2. *Cancel*";
 }
 else
 {
