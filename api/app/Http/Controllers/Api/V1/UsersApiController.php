@@ -49,6 +49,22 @@ class UsersApiController extends Controller
             ->Where('referrer', $user->username)
             ->count();
 
+            $monnify = DB::table('monnify')
+            ->Where('username', $user->username)
+            ->first();
+
+            $flutterwave = DB::table('flutterwave_accounts')
+            ->Where('username', $user->username)
+            ->first();
+
+            $bankAccount = [];
+            if($monnify && $monnify != null){
+                $bankAccount = $monnify;
+            }
+            else if($flutterwave && $flutterwave != null){
+                $bankAccount = $flutterwave;
+            }
+
             return response()->json(['status' => 1,
             'message' => 'Access Granted!',
             'result' => [
@@ -62,10 +78,9 @@ class UsersApiController extends Controller
                 'package_status' => $user->package_status,
                 'username' => $user->username,
                 'referrals' => $referrals,
-                'pin' => $user->pin,
                 'role' => $user->role
 
-              ], 'wallet' => $wallet, 'bank' => $bank], 200);
+              ], 'wallet' => $wallet, 'bank' => $bank, 'bankAccount' => $bankAccount], 200);
         }
         else
         {
@@ -86,21 +101,24 @@ class UsersApiController extends Controller
             ->Where('username', $user->username)
             ->first();
 
-if($monnify && $monnify != null){
-    return response()->json(['status' => 1,
-    'message' => 'Access Granted!',
-    'monnify' => $monnify], 200);
+            $flutterwave = DB::table('flutterwave_accounts')
+            ->Where('username', $user->username)
+            ->first();
+
+            if($monnify && $monnify != null){
+                return response()->json(['status' => 1,
+                'message' => 'Access Granted!',
+                'result' => $monnify], 200);
+            }
+            else if($flutterwave && $flutterwave != null){
+                return response()->json(['status' => 1,
+                'message' => 'Access Granted!',
+                'result' => $flutterwave], 200);
+            }
 }
 else{
-    return response()->json(['status' => 0, 'message' => 'Monnify Account not found!'], 401);
+    return response()->json(['status' => 0, 'message' => 'Virtual Account not found!'], 401);
 }
-
-
-        }
-        else
-        {
-            return response()->json(['status' => 0, 'message' => 'Access Denied!'], 401);
-        }
 
     }
 

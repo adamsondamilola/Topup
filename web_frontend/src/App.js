@@ -57,6 +57,7 @@ import ViewTransactions from "./components/wallet-components/viewTransaction";
 import Api from "./components/api-components/Api";
 import ManageAirtime from "./components/recharge/ManageAirtime";
 import AddAirtimePin from "./components/recharge/AddAirtimePin";
+import ViewGeneratedAirtimePublic from "./components/recharge/viewGeneratedAirtimePublic";
 
 function App() {
   return (
@@ -114,6 +115,7 @@ function App() {
          <Route path="/user/package_coupons" element={<UserPackageCoupons />} />
          <Route path="/user/wallet_coupons" element={<UserWalletCoupons />} />
          <Route path="/user/:id/view_airtime" element={<ViewGeneratedAirtime />} />
+         <Route path="/user/:id/:token/airtime/print" element={<ViewGeneratedAirtimePublic />} />
          <Route path="/user/api" element={<Api />} />
          <Route path="/user/manage_airtime" element={<ManageAirtime />} />
          <Route path="/user/add_airtime" element={<AddAirtimePin />} />

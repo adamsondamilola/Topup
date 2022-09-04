@@ -46,7 +46,7 @@ class ElectricityBillApiController extends Controller
         ->Where('username', $user->username)
         ->first();
 
-if(strlen($request->product_code) < 1 || strlen($request->product) < 1 ){
+if(strlen($request->product_code) < 1){
             return response()->json(['status' => 0, 'message' => 'Please, select a product.'], 401);
         }
         else if($request->product_code == null || $request->product_code == '' ){
@@ -142,7 +142,7 @@ return response()->json(['status' => 1, 'message' => 'Details OK.',
                       ]);
 
                       $meter_number = $request->meter_number;
-                      $product = $request->product;
+                      $product = $request->product_code;
                       $amount = $request->amount;
 
                       //verify meter_number
@@ -164,7 +164,7 @@ return response()->json(['status' => 1, 'message' => 'Details OK.',
                         if(!is_numeric($request->amount)){
                             return response()->json(['status' => 0, 'message' => 'Amount is invalid.'], 401);
                         }
-                        else if(strlen($request->product_code) < 1 || strlen($request->product) < 1 ){
+                        else if(strlen($request->product_code) < 1){
                             return response()->json(['status' => 0, 'message' => 'Please, select a product.'], 401);
                         }
                         else if($request->product_code == null || $request->product_code == '' ){
@@ -178,8 +178,8 @@ return response()->json(['status' => 1, 'message' => 'Details OK.',
                         return response()->json(['status' => 0, 'message' => 'Amount is beyond the amount in main wallet. Add fund to continue with transaction.'], 401);
                     }
 
-                    else if($request->amount < 500){
-                            return response()->json(['status' => 0, 'message' => 'Minimum amount is 500 NGN.'], 401);
+                    else if($request->amount < 100){
+                            return response()->json(['status' => 0, 'message' => 'Minimum amount is 100 NGN.'], 401);
                         }
 
                     else if($validator->fails()){

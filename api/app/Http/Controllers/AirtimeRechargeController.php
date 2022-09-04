@@ -1051,6 +1051,34 @@ if($data == true){
         }
     }
 
+//for whatsapp chatbot
+    public function get_airtime_details_public(Request $request, $token, $id){
+
+            $x = DB::table('whatsapp_airtime_epin')
+            ->Where('token', $token)
+            ->Where('status', 1)
+            ->count();
+
+            if($x > 0)
+            {
+              $airtime_vouchers = DB::table('airtime_vouchers')
+              ->Where('id', $id)
+              ->orderBy('id', 'desc')
+              ->first();
+
+              $airtime_vouchers->json_data = json_decode($airtime_vouchers->json_data);
+
+              return response()->json(['status' => 1,
+              'message' => 'Access Granted!',
+              'result' => $airtime_vouchers], 200);
+            }
+            else
+            {
+                return response()->json(['status' => 0, 'message' => 'Access Denied!'], 401);
+            }
+
+    }
+
     public function get_airtime_list(Request $request, $login_token){
         $token_check = $this->check_login_token($login_token);
         if($token_check != 0)

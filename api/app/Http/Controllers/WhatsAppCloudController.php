@@ -18,13 +18,13 @@ use App\Http\Controllers\WABAMessageTemplateController;
 class WhatsAppCloudController extends Controller
 {
   private $email = "adamsondamilola@gmail.com";
-  private $version = "v13.0";
+  private $version = "v14.0";
   private $messagingProduct = "whatsapp";
   private $recipientType = "individual";
   private $businessId = "432041555402309";
-  private $phoneNumberId = "104470072401342";
-  private $accessToken = "EAAWLn07CoDgBAMhJTwYepFGcF1g4SAM4ly6tR4qfHdYQtINjP7i6J1EgHgZB0UkQAvg7tF41lehXerQx4UZCejrAHfUWClb7PQP0fcNTVZCEiSH0H5eVajzNerZCZCJrNdAB30f4hBLXi0xmkqcZCG3njZCDUOij8qe6wJyZAxz8FnYCkY8PK9QKOAlUbu2mdhjc8elW0vZBmGQZDZD";
-  private $wABAId = "103383822512018"; //Whatsapp business account ID
+  private $phoneNumberId = "105974352248264";
+  private $accessToken = "EAAWLn07CoDgBAChpLa9OkX2cxVttArkyISZBYP7WfD2RKnDln5p0r9jst3WnA0tc5LKbs4WzwBBOFVGKjcyYSTTA7alQZBLeKq6L7FplWK1giaE2QwABHXmNobdLnIsagUCGF8NYPR9aXavNAwRpBaZCwZBr2NEUiZBXbMM5JPR2Ss9klwtPL";
+  private $wABAId = "105830162263209"; //Whatsapp business account ID
 
   public function sendMail($subject, $to, $from, $msg)
   {
@@ -311,40 +311,258 @@ $whatsapp_user_count = DB::table('whatsapp_cloud_users')
           //Track laundry -->
 
 
-          //airtime vtu --
-                    else if(str_contains($last_message_out->message, "Enter a number from the list of networks below") && $last_message_in->message != "5" && $last_message_in->message != "airtime")
-                    {
-                      $msg = trim(strtolower($message));
-                      if(!$alreadyReplied)
-                      {
-                        $this->SendTextMessage($messagesRes->buyAirtimeVTU($phone, $name, $message_id, $msg), $phone, false);
-                      }
-                    }
-                    else if(str_contains($last_message_out->message, "VTU*. Please, enter amount"))
-                    {
-                      $msg = trim(strtolower($message));
-                      if(!$alreadyReplied)
-                      {
-                        $this->SendTextMessage($messagesRes->buyAirtimeVTU($phone, $name, $message_id, $msg), $phone, false);
-                      }
-                    }
-                    else if(str_contains($last_message_out->message, " or enter phone number of beneficiary for airtime VTU"))
-                    {
-                      $msg = trim(strtolower($message));
-                      if(!$alreadyReplied)
-                      {
-                        $this->SendTextMessage($messagesRes->buyAirtimeVTU($phone, $name, $message_id, $msg), $phone, false);
-                      }
-                    }
-                    else if(str_contains($last_message_out->message, "You are about to send airtime") && $last_message_in->message == "1")
-                    {
-                      $msg = trim(strtolower($message));
-                      if(!$alreadyReplied)
-                      {
-                        $this->SendTextMessage($messagesRes->buyAirtimeVTU($phone, $name, $message_id, $msg), $phone, false);
-                      }
-                    }
-          //airtime vtu -->
+                    //airtime vtu --
+                              else if(str_contains($last_message_out->message, "Enter a number from the list of networks below") && $last_message_in->message != "5" && $last_message_in->message != "airtime")
+                              {
+                                $msg = trim(strtolower($message));
+                                if(!$alreadyReplied)
+                                {
+                                  $this->SendTextMessage($messagesRes->buyAirtimeVTU($phone, $name, $message_id, $msg), $phone, false);
+                                }
+                              }
+                              else if(str_contains($last_message_out->message, "VTU*. Please, enter amount"))
+                              {
+                                $msg = trim(strtolower($message));
+                                if(!$alreadyReplied)
+                                {
+                                  $this->SendTextMessage($messagesRes->buyAirtimeVTU($phone, $name, $message_id, $msg), $phone, false);
+                                }
+                              }
+                              else if(str_contains($last_message_out->message, " or enter phone number of beneficiary for airtime VTU"))
+                              {
+                                $msg = trim(strtolower($message));
+                                if(!$alreadyReplied)
+                                {
+                                  $this->SendTextMessage($messagesRes->buyAirtimeVTU($phone, $name, $message_id, $msg), $phone, false);
+                                }
+                              }
+                              else if(str_contains($last_message_out->message, "You are about to send airtime") && $last_message_in->message == "1")
+                              {
+                                $msg = trim(strtolower($message));
+                                if(!$alreadyReplied)
+                                {
+                                  $this->SendTextMessage($messagesRes->buyAirtimeVTU($phone, $name, $message_id, $msg), $phone, false);
+                                }
+                              }
+                              else if(str_contains($last_message_out->message, "You are about to send airtime") && $last_message_in->message == "2")
+                              {
+                                $msg = trim(strtolower($message));
+                                if(!$alreadyReplied)
+                                {
+                                  $this->SendTextMessage($messagesRes->buyAirtimeVTU($phone, $name, $message_id, $msg), $phone, false);
+                                }
+                              }
+                    //airtime vtu -->
+
+
+                              //airtime print --
+                                        else if(str_contains($last_message_out->message, "Enter a number of the network PIN you want to generate from the list below") && $last_message_in->message != "6" && $last_message_in->message != "print")
+                                        {
+                                          $msg = trim(strtolower($message));
+                                          if(!$alreadyReplied)
+                                          {
+                                            $this->SendTextMessage($messagesRes->buyAirtimePin($phone, $name, $message_id, $msg), $phone, false);
+                                          }
+                                        }
+                                        else if(str_contains($last_message_out->message, "airtime pin*. Please, enter amount"))
+                                        {
+                                          $msg = trim(strtolower($message));
+                                          if(!$alreadyReplied)
+                                          {
+                                            $this->SendTextMessage($messagesRes->buyAirtimePin($phone, $name, $message_id, $msg), $phone, false);
+                                          }
+                                        }
+                                        else if(str_contains($last_message_out->message, "Enter the quantity of airtime pins you want"))
+                                        {
+                                          $msg = trim(strtolower($message));
+                                          if(!$alreadyReplied)
+                                          {
+                                            $this->SendTextMessage($messagesRes->buyAirtimePin($phone, $name, $message_id, $msg), $phone, false);
+                                          }
+                                        }
+                                        else if(str_contains($last_message_out->message, "You are about to purchase airtime") && $last_message_in->message == "1")
+                                        {
+                                          $msg = trim(strtolower($message));
+                                          if(!$alreadyReplied)
+                                          {
+                                            $this->SendTextMessage($messagesRes->buyAirtimePin($phone, $name, $message_id, $msg), $phone, true);
+                                          }
+                                        }
+                                        else if(str_contains($last_message_out->message, "You are about to purchase airtime") && $last_message_in->message == "2")
+                                        {
+                                          $msg = trim(strtolower($message));
+                                          if(!$alreadyReplied)
+                                          {
+                                            $this->SendTextMessage($messagesRes->buyAirtimePin($phone, $name, $message_id, $msg), $phone, false);
+                                          }
+                                        }
+                              //airtime print -->
+
+                              //buy data vtu --
+                                        else if(str_contains($last_message_out->message, "Enter a number from the list of data providers below"))
+                                        {
+                                          $msg = trim(strtolower($message));
+                                          if(!$alreadyReplied)
+                                          {
+                                            $this->SendTextMessage($messagesRes->buyData($phone, $name, $message_id, $msg), $phone, false);
+                                          }
+                                        }
+                                        else if(str_contains($last_message_out->message, "Data*. Please, select a package"))
+                                        {
+                                          $msg = trim(strtolower($message));
+                                          if(!$alreadyReplied)
+                                          {
+                                            $this->SendTextMessage($messagesRes->buyData($phone, $name, $message_id, $msg), $phone, false);
+                                          }
+                                        }
+                                        else if(str_contains($last_message_out->message, " or enter phone number of beneficiary for data share"))
+                                        {
+                                          $msg = trim(strtolower($message));
+                                          if(!$alreadyReplied)
+                                          {
+                                            $this->SendTextMessage($messagesRes->buyData($phone, $name, $message_id, $msg), $phone, false);
+                                          }
+                                        }
+                                        else if(str_contains($last_message_out->message, "You are about to send data worth of") && $last_message_in->message == "1")
+                                        {
+                                          $msg = trim(strtolower($message));
+                                          if(!$alreadyReplied)
+                                          {
+                                            $this->SendTextMessage($messagesRes->buyData($phone, $name, $message_id, $msg), $phone, false);
+                                          }
+                                        }
+                                        else if(str_contains($last_message_out->message, "You are about to send data worth of") && $last_message_in->message == "2")
+                                        {
+                                          $msg = trim(strtolower($message));
+                                          if(!$alreadyReplied)
+                                          {
+                                            $this->SendTextMessage($messagesRes->buyData($phone, $name, $message_id, $msg), $phone, false);
+                                          }
+                                        }
+                              //buy data vtu -->
+
+
+                              //buy mtn sme data vtu --
+                                        else if(str_contains($last_message_out->message, "Data (SME)*. Please, select a package"))
+                                        {
+                                          $msg = trim(strtolower($message));
+                                          if(!$alreadyReplied)
+                                          {
+                                            $this->SendTextMessage($messagesRes->buyMtnSmeData($phone, $name, $message_id, $msg), $phone, false);
+                                          }
+                                        }
+                                        else if(str_contains($last_message_out->message, " or enter phone number of beneficiary for MTN SME data"))
+                                        {
+                                          $msg = trim(strtolower($message));
+                                          if(!$alreadyReplied)
+                                          {
+                                            $this->SendTextMessage($messagesRes->buyMtnSmeData($phone, $name, $message_id, $msg), $phone, false);
+                                          }
+                                        }
+                                        else if(str_contains($last_message_out->message, "You are about to send MTN SME data worth of") && $last_message_in->message == "1")
+                                        {
+                                          $msg = trim(strtolower($message));
+                                          if(!$alreadyReplied)
+                                          {
+                                            $this->SendTextMessage($messagesRes->buyMtnSmeData($phone, $name, $message_id, $msg), $phone, false);
+                                          }
+                                        }
+                                        else if(str_contains($last_message_out->message, "You are about to send MTN SME data worth of") && $last_message_in->message == "2")
+                                        {
+                                          $msg = trim(strtolower($message));
+                                          if(!$alreadyReplied)
+                                          {
+                                            $this->SendTextMessage($messagesRes->buyMtnSmeData($phone, $name, $message_id, $msg), $phone, false);
+                                          }
+                                        }
+                              //buy mtn sme data vtu -->
+
+                                                            //buy electricity --
+                                                                      else if(str_contains($last_message_out->message, "To purchase electricity bill; Please"))
+                                                                      {
+                                                                        $msg = trim(strtolower($message));
+                                                                        if(!$alreadyReplied)
+                                                                        {
+                                                                          $this->SendTextMessage($messagesRes->buyPowerToken($phone, $name, $message_id, $msg), $phone, false);
+                                                                        }
+                                                                      }
+                                                                      else if(str_contains($last_message_out->message, "Enter meter number"))
+                                                                      {
+                                                                        $msg = trim(strtolower($message));
+                                                                        if(!$alreadyReplied)
+                                                                        {
+                                                                          $this->SendTextMessage($messagesRes->buyPowerToken($phone, $name, $message_id, $msg), $phone, false);
+                                                                        }
+                                                                      }
+                                                                      else if(str_contains($last_message_out->message, "Enter the amount of electricity token you want to purchase"))
+                                                                      {
+                                                                        $msg = trim(strtolower($message));
+                                                                        if(!$alreadyReplied)
+                                                                        {
+                                                                          $this->SendTextMessage($messagesRes->buyPowerToken($phone, $name, $message_id, $msg), $phone, false);
+                                                                        }
+                                                                      }
+                                                                      else if(str_contains($last_message_out->message, "You are about to purchase electricity token worth of") && $last_message_in->message == "1")
+                                                                      {
+                                                                        $msg = trim(strtolower($message));
+                                                                        if(!$alreadyReplied)
+                                                                        {
+                                                                          $this->SendTextMessage($messagesRes->buyPowerToken($phone, $name, $message_id, $msg), $phone, false);
+                                                                        }
+                                                                      }
+                                                                      else if(str_contains($last_message_out->message, "You are about to purchase electricity token worth of") && $last_message_in->message == "2")
+                                                                      {
+                                                                        $msg = trim(strtolower($message));
+                                                                        if(!$alreadyReplied)
+                                                                        {
+                                                                          $this->SendTextMessage($messagesRes->buyPowerToken($phone, $name, $message_id, $msg), $phone, false);
+                                                                        }
+                                                                      }
+                                                            //buy electricity -->
+
+
+                                                                                          //buy cable --
+                                                                                                    else if(str_contains($last_message_out->message, "Enter a number from the list of cable TV providers below"))
+                                                                                                    {
+                                                                                                      $msg = trim(strtolower($message));
+                                                                                                      if(!$alreadyReplied)
+                                                                                                      {
+                                                                                                        $this->SendTextMessage($messagesRes->buyCableSub($phone, $name, $message_id, $msg), $phone, false);
+                                                                                                      }
+                                                                                                    }
+                                                                                                    else if(str_contains($last_message_out->message, "Cable*. Please, select a package"))
+                                                                                                    {
+                                                                                                      $msg = trim(strtolower($message));
+                                                                                                      if(!$alreadyReplied)
+                                                                                                      {
+                                                                                                        $this->SendTextMessage($messagesRes->buyCableSub($phone, $name, $message_id, $msg), $phone, false);
+                                                                                                      }
+                                                                                                    }
+                                                                                                    else if(str_contains($last_message_out->message, "Enter IUC number"))
+                                                                                                    {
+                                                                                                      $msg = trim(strtolower($message));
+                                                                                                      if(!$alreadyReplied)
+                                                                                                      {
+                                                                                                        $this->SendTextMessage($messagesRes->buyCableSub($phone, $name, $message_id, $msg), $phone, false);
+                                                                                                      }
+                                                                                                    }
+                                                                                                    else if(str_contains($last_message_out->message, "You are about to subscribe to a cable TV package worth of") && $last_message_in->message == "1")
+                                                                                                    {
+                                                                                                      $msg = trim(strtolower($message));
+                                                                                                      if(!$alreadyReplied)
+                                                                                                      {
+                                                                                                        $this->SendTextMessage($messagesRes->buyCableSub($phone, $name, $message_id, $msg), $phone, false);
+                                                                                                      }
+                                                                                                    }
+                                                                                                    else if(str_contains($last_message_out->message, "You are about to subscribe to a cable TV package worth of") && $last_message_in->message == "2")
+                                                                                                    {
+                                                                                                      $msg = trim(strtolower($message));
+                                                                                                      if(!$alreadyReplied)
+                                                                                                      {
+                                                                                                        $this->SendTextMessage($messagesRes->buyCableSub($phone, $name, $message_id, $msg), $phone, false);
+                                                                                                      }
+                                                                                                    }
+                                                                                          //buy cable -->
 
 
           else if(str_contains(strtolower($message), 'thanks') || str_contains(strtolower($message), 'thank you') || str_contains(strtolower($message), 'thank'))
@@ -372,23 +590,88 @@ $whatsapp_user_count = DB::table('whatsapp_cloud_users')
                       }
                     }
 
-           else if(trim(strtolower($message)) == "5" || trim(strtolower($message)) == "airtime")
-                    {
-                      $msg = trim(strtolower($message));
-                      if(!$alreadyReplied)
-                      {
-                        $this->SendTextMessage($messagesRes->buyAirtimeVTU($phone, $name, $message_id, $msg), $phone, false);
-                      }
-                    }
+                    else if(trim(strtolower($message)) == "3" || trim(strtolower($message)) == "data")
+                              {
+                                $msg = trim(strtolower($message));
+                                if(!$alreadyReplied)
+                                {
+                                  $this->SendTextMessage($messagesRes->buyData($phone, $name, $message_id, $msg), $phone, false);
+                                }
+                              }
 
-            else if(trim(strtolower($message)) == "shortcut" || trim($message) == "10")
+                              else if(trim(strtolower($message)) == "4" || trim(strtolower($message)) == "sme")
+                                        {
+                                          $msg = trim(strtolower($message));
+                                          if(!$alreadyReplied)
+                                          {
+                                            $this->SendTextMessage($messagesRes->buyMtnSmeData($phone, $name, $message_id, $msg), $phone, false);
+                                          }
+                                        }
+
+
+                    else if(trim(strtolower($message)) == "5" || trim(strtolower($message)) == "airtime")
+                             {
+                               $msg = trim(strtolower($message));
+                               if(!$alreadyReplied)
+                               {
+                                 $this->SendTextMessage($messagesRes->buyAirtimeVTU($phone, $name, $message_id, $msg), $phone, false);
+                               }
+                             }
+
+                             else if(trim(strtolower($message)) == "6" || trim(strtolower($message)) == "print")
+                                      {
+                                        $msg = trim(strtolower($message));
+                                        if(!$alreadyReplied)
+                                        {
+                                          $this->SendTextMessage($messagesRes->buyAirtimePin($phone, $name, $message_id, $msg), $phone, false);
+                                        }
+                                      }
+
+                                      else if(trim(strtolower($message)) == "7" || trim(strtolower($message)) == "tv")
+                                               {
+                                                 $msg = trim(strtolower($message));
+                                                 if(!$alreadyReplied)
+                                                 {
+                                                   $this->SendTextMessage($messagesRes->buyCableSub($phone, $name, $message_id, $msg), $phone, false);
+                                                 }
+                                               }
+
+                                      else if(trim(strtolower($message)) == "8" || trim(strtolower($message)) == "power")
+                                               {
+                                                 $msg = trim(strtolower($message));
+                                                 if(!$alreadyReplied)
+                                                 {
+                                                   $this->SendTextMessage($messagesRes->buyPowerToken($phone, $name, $message_id, $msg), $phone, false);
+                                                 }
+                                               }
+
+                                      else if(trim(strtolower($message)) == "wallet" || trim($message) == "9")
+                                    {
+                                      if(!$alreadyReplied)
+                                      {
+                                        $this->SendTextMessage($messagesRes->topupWallet($phone, $name, $message_id), $phone, true);
+                                      }
+                                    }
+
+                                    else if(trim(strtolower($message)) == "new" || trim($message) == "10")
+                                  {
+                                    if(!$alreadyReplied)
+                                    {
+                                      $this->SendTextMessage($messagesRes->openTopupearnAccount($phone, $name, $message_id), $phone, true);
+                                    }
+                                  }
+
+
+                                                            else if(trim(strtolower($message)) == "shortcut" || trim($message) == "11")
+                                                          {
+                                                            if(!$alreadyReplied)
+                                                            {
+                                                              $this->SendTextMessage($messagesRes->shortcutKeys($phone, $name, $message_id), $phone, false);
+                                                            }
+                                                          }
+
+          else
           {
-            if(!$alreadyReplied)
-            {
-              $this->SendTextMessage($messagesRes->shortcutKeys($phone, $name, $message_id), $phone, false);
-            }
-          }
-          else{
             if(!$alreadyReplied)
             {
               $this->SendTextMessage($messagesRes->invalidCommand($phone, $name, $message_id), $phone, false);

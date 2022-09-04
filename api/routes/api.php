@@ -25,6 +25,8 @@ use App\Http\Controllers\Api\V1\UsersApiController;
 use App\Http\Controllers\Api\V1\AirtimeRechargeApiController;
 use App\Http\Controllers\Api\V1\DataRechargeApiController;
 use App\Http\Controllers\Api\V1\ElectricityBillApiController;
+use App\Http\Controllers\Api\V1\CableApiController;
+
 
 
 /*
@@ -130,6 +132,7 @@ Route::post('create_api', [ApiController::class, 'CreateNewApiToken']);
                         Route::post('mtn_sme_data', [AirtimeRechargeController::class, 'mtn_sme_data']);
                         Route::get('get_data_billing', [AirtimeRechargeController::class, 'getDataBillingList']);
                         Route::get('{login_token}/{id}/get_airtime_details', [AirtimeRechargeController::class, 'get_airtime_details']);
+                        Route::get('{token}/{id}/get_airtime_details_public', [AirtimeRechargeController::class, 'get_airtime_details_public']);
                         Route::get('{login_token}/get_airtime_list', [AirtimeRechargeController::class, 'get_airtime_list']);
 
                         Route::post('verify_cable_data', [CableController::class, 'verify_cable_data']);
@@ -291,11 +294,11 @@ Route::post('create_api', [ApiController::class, 'CreateNewApiToken']);
                                         Route::get('{login_token}/{id}/get_airtime_details', [AirtimeRechargeApiController::class, 'get_airtime_details']);
                                         Route::get('{login_token}/get_airtime_list', [AirtimeRechargeApiController::class, 'get_airtime_list']);
 
-                                        Route::post('verify_cable_data', [CableApiController::class, 'verify_cable_data']);
+                                        Route::post('verify_cable', [CableApiController::class, 'verify_cable_data']);
                                         Route::post('cable_subscription', [CableApiController::class, 'cable_subscription']);
                                         Route::get('get_cable_billing', [CableApiController::class, 'getCableBillingList']);
 
-                                        Route::post('verify_electricity_data', [ElectricityBillApiController::class, 'verify_electricity_data']);
+                                        Route::post('verify_meter', [ElectricityBillApiController::class, 'verify_electricity_data']);
                                         Route::post('electricity_subscription', [ElectricityBillApiController::class, 'electricity_subscription']);
                                         Route::get('get_electricity_billing', [ElectricityBillApiController::class, 'getElectricityBillingList']);
                                         Route::get('{login_token}/{id}/get_electricity_details', [ElectricityBillApiController::class, 'get_electricity_details']);
@@ -309,5 +312,6 @@ Route::post('create_api', [ApiController::class, 'CreateNewApiToken']);
                                         function()
                                         {
                                           Route::get('{login_token}/user_details', [UsersApiController::class, 'get_user_details']);
+                                          Route::get('{login_token}/virtual_account_details', [UsersApiController::class, 'virtual_account_details']);
                                         }
                                         );

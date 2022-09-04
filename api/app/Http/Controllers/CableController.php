@@ -170,7 +170,13 @@ else
 
                       $iuc = $request->iuc;
                       $product = $request->product;
-                      $amount = $request->amount;
+                      //$amount = $request->amount;
+                      
+                      $bill = DB::table('cable_billing')
+                      ->Where('service_code', $request->product_code)
+                      ->first();
+                      
+                      $amount = $bill->amount;
 
                       //verify iuc
                       $api_keys = DB::table('api_keys')

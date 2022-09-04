@@ -221,6 +221,7 @@ class AirtimeRechargeApiController extends Controller
             'token' => 'required|string',
         ]);
 
+        $pins = "";
         $network = $request->network;
         $amount = $request->amount * $request->quantity;
         $quantity = $request->quantity;
@@ -358,6 +359,7 @@ class AirtimeRechargeApiController extends Controller
                 foreach($generated_airtime as $pin)
                 {
                   $pin->pin = $decrypt->decryptString($pin->pin);
+                  $pins .= "PIN: ".$pin->pin."\n\n";
                 }
 
             //insert airtime json result
@@ -410,7 +412,7 @@ class AirtimeRechargeApiController extends Controller
                 1
                 ]);
 
-                return response()->json(['status' => 1, 'message' => 'Transaction successful', 'transactionId' => $unique_id, 'epin' => $generated_airtime, 'quantity' => $quantity, 'airtime_id' => $recentlyInsertedId->id ], 200);
+                return response()->json(['status' => 1, 'message' => 'Transaction successful', 'transactionId' => $unique_id, 'epin' => $generated_airtime, 'quantity' => $quantity, 'pins' => $pins, 'airtime_id' => $recentlyInsertedId->id ], 200);
 
               }
 
@@ -655,8 +657,6 @@ class AirtimeRechargeApiController extends Controller
 
         $network = $request->network;
         $amount = $request->amount;
-
-
 
         $token_check = $this->check_login_token($request->token);
         if($token_check != 0)

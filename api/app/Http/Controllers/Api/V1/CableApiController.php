@@ -47,7 +47,7 @@ class CableApiController extends Controller
         ->Where('username', $user->username)
         ->first();
 
-                else if(strlen($request->product_code) < 1 || strlen($request->product) < 1 )
+                 if(strlen($request->product_code) < 1 )
                 {
                     return response()->json(['status' => 0, 'message' => 'Please, select a product.'], 401);
                 }
@@ -114,19 +114,20 @@ class CableApiController extends Controller
       public function cable_subscription(Request $request){
 
           $validator = Validator::make($request->all(), [
-            'product' => 'required|string',
             'iuc' => 'required|numeric',
-            'amount' => 'required|numeric',
             'product_code' => 'required|string',
-              'network_desc' => 'required|string',
               'token' => 'required|string'
                       ]);
 
                       $iuc = $request->iuc;
-                      $product = $request->product;
-                      $amount = $request->amount;
+                      
 
-                      //verify iuc
+                     // $amount = 0;
+                      $bill = DB::table('cable_billing')
+                      ->Where('service_code', $request->product_code)
+                      ->first();
+                      $amount = $request->amount = $bill->service_amount;
+
                       $api_keys = DB::table('api_keys')
                       ->Where('api_provider', 'toprecharge')
                       ->first();
@@ -145,17 +146,14 @@ class CableApiController extends Controller
                         if(!is_numeric($request->amount)){
                             return response()->json(['status' => 0, 'message' => 'Amount is invalid.'], 401);
                         }
-                        else if(strlen($request->product_code) < 1 || strlen($request->product) < 1 ){
+                        else if(strlen($request->product_code) < 1 ){
                             return response()->json(['status' => 0, 'message' => 'Please, select a product.'], 401);
                         }
                         else if($request->product_code == null || $request->product_code == '' ){
                             return response()->json(['status' => 0, 'message' => 'Please, select a product.'], 401);
                         }
-                else if($product == null || $product  == ""){
-                    return response()->json(['status' => 0, 'message' => 'No service selected.'], 401);
-                }
                 else if($iuc == null){
-                    return response()->json(['status' => 0, 'message' => 'IUC is invalid or empty.'], 401);
+                    return response()->json(['status' => 0, 'message' => 'IUC is invalid or empty. Please, try again.'], 401);
                 }
                     else if($request->amount+50 > $checkWallet->main_wallet){
                         return response()->json(['status' => 0, 'message' => 'Amount is beyond the amount in main wallet. Add fund to continue with transaction.'], 401);
@@ -194,15 +192,15 @@ class CableApiController extends Controller
               }
 
 
-              if($product == "DSTV"){
+              if(str_contains($request->product_code, "dstv")){
                   $commission = $commission_->dstv;
                   }
 
-                  if($product == "GOTV"){
+                  if(str_contains($request->product_code, "gotv")){
                       $commission = $commission_->gotv;
                       }
 
-                      if($product == "STARTIMES"){
+                      if(str_contains($request->product_code, "startimes")){
                           $commission = $commission_->startimes;
                           }
 
@@ -254,10 +252,10 @@ class CableApiController extends Controller
                 )
                 values (?, ?, ?, ?, ?, ?, ?, ?, ?)', [
                 $user->username,
-                $request->network_desc,
+                $request->product_code,
                 $amount,
                 $request->iuc,
-                $request->product,
+                $request->product_code,
                 $cash_back,
                 $cash_back,
                 'Cable TV',
