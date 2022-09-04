@@ -89,7 +89,6 @@ const PrintAirtime = () => {
     const [wallet, setWallet] = useState([]);
     const [logo, setlogo] = useState(null);
     const [orderId, setOrderId] = useState(null);
-//    const [dialCode, setDialCode] = useState(null);
     const [services, setServices] = useState(service);
     const [phone, setPhone] = useState(null);
     const [amount, setAmount] = useState(null);

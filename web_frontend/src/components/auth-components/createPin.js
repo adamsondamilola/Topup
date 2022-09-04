@@ -40,6 +40,7 @@ const CreatePin = () => {
                             setErrMsg(null)
                             setLoading(false)
                             setSuccessMsg(json.message)
+                            window.location.replace("/user/dashboard");
                         }
                         else {
                             setErrMsg(json.message)

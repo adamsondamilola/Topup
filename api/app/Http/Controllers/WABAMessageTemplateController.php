@@ -128,7 +128,7 @@ class WABAMessageTemplateController extends Controller
   //return "text test";
   if($pending_airtime_epin->status == 0)
   {
-  $url = $this->topUpDomainApi."recharge/print_airtime";
+        $url = $this->topUpDomainApi."recharge/print_airtime";
         // Initializes a new cURL session
         $curl = curl_init($url);
         // Set the CURLOPT_RETURNTRANSFER option to true
@@ -149,19 +149,18 @@ class WABAMessageTemplateController extends Controller
         // Close cURL session
         curl_close($curl);
 
-        if($json_obj->status == 1){
+        if($json_obj->status == 1)
+        {
 
 $token = Str::random(80);
-
-             DB::update('update whatsapp_airtime_epin set status = ?, token = ? where id = ? and phone = ? limit 1',[1, $token, $pending_airtime_epin->id, $phone]);
+DB::update('update whatsapp_airtime_epin set status = ?, token = ? where id = ? and phone = ? limit 1',[1, $token, $pending_airtime_epin->id, $phone]);
 $message = "";
 $decrypt = new EncryptController;
 
 $message .= $json_obj->pins;
 $message .= "To print airtime PIN, kindly click the link below.\n";
 $message .= $this->topUpDomain."user/".$json_obj->airtime_id."/".$token."/airtime/print";
-
-             return $message;
+return $message;
 
         }
         else
