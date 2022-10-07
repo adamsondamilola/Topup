@@ -9,7 +9,8 @@ const airtel = require("../images/logo/airtel.jpg");
 const nmobile = require("../images/logo/9mobile.jpg");
 const electricity = require("../images/logo/electricity.png");
 const print_airtime = require("../images/logo/printer.jpg");
+const  whatsapp= require("../images/logo/whatsapp_logo.png");
 
 export default {
-    mtn, wallet, sms, airtime, data, cable_tv, glo, airtel, nmobile, electricity, print_airtime
+    mtn, wallet, sms, airtime, data, cable_tv, glo, airtel, nmobile, electricity, print_airtime, whatsapp
 }

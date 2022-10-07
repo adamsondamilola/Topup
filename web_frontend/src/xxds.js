@@ -1,6 +1,5 @@
 
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
 import {
   BrowserRouter as Router,
@@ -9,8 +8,7 @@ import {
   Routes,
   Route
 } from "react-router-dom";
-
-import Home from './pages/home';
+import Home from './components/landing-components/pages/home';
 
 function App() {
   return (
@@ -28,7 +26,7 @@ function App() {
            </li>
          </ul>
         <Routes>
-              <Route exact path='/' element={< Home />}></Route>
+              <Route exact path='/' element={<Home />}></Route>
        </Routes>
        </div>
     </Router>

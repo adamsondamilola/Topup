@@ -298,6 +298,16 @@ $whatsapp_user_count = DB::table('whatsapp_cloud_users')
             }
           }
 
+          //create account
+          else if(str_contains($last_message_out->message, "Kindly wait for 1 minute while we create an account for you...") && $last_message_in->message == 1)
+          {
+            $msg = trim(strtolower($message));
+            if(!$alreadyReplied)
+            {
+              $this->SendTextMessage($messagesRes->signup($phone, $name, $message_id, $msg), $phone, false);
+            }
+          }
+
 
           //Track laundry --
                     else if($last_message_out->message == "Please enter your laundry tracking ID" && $message != "2" && strtolower($message) != "track")
@@ -442,7 +452,15 @@ $whatsapp_user_count = DB::table('whatsapp_cloud_users')
                               //buy data vtu -->
 
 
-                              //buy mtn sme data vtu --
+                              //buy sme data vtu --
+                                        else if(str_contains($last_message_out->message, "Enter a number from the list of SME Data providers below"))
+                                        {
+                                          $msg = trim(strtolower($message));
+                                          if(!$alreadyReplied)
+                                          {
+                                            $this->SendTextMessage($messagesRes->buyMtnSmeData($phone, $name, $message_id, $msg), $phone, false);
+                                          }
+                                        }
                                         else if(str_contains($last_message_out->message, "Data (SME)*. Please, select a package"))
                                         {
                                           $msg = trim(strtolower($message));
@@ -451,7 +469,7 @@ $whatsapp_user_count = DB::table('whatsapp_cloud_users')
                                             $this->SendTextMessage($messagesRes->buyMtnSmeData($phone, $name, $message_id, $msg), $phone, false);
                                           }
                                         }
-                                        else if(str_contains($last_message_out->message, " or enter phone number of beneficiary for MTN SME data"))
+                                        else if(str_contains($last_message_out->message, " or enter phone number of beneficiary for the SME data"))
                                         {
                                           $msg = trim(strtolower($message));
                                           if(!$alreadyReplied)
@@ -459,7 +477,7 @@ $whatsapp_user_count = DB::table('whatsapp_cloud_users')
                                             $this->SendTextMessage($messagesRes->buyMtnSmeData($phone, $name, $message_id, $msg), $phone, false);
                                           }
                                         }
-                                        else if(str_contains($last_message_out->message, "You are about to send MTN SME data worth of") && $last_message_in->message == "1")
+                                        else if(str_contains($last_message_out->message, "You are about to send SME data worth of") && $last_message_in->message == "1")
                                         {
                                           $msg = trim(strtolower($message));
                                           if(!$alreadyReplied)
@@ -467,7 +485,7 @@ $whatsapp_user_count = DB::table('whatsapp_cloud_users')
                                             $this->SendTextMessage($messagesRes->buyMtnSmeData($phone, $name, $message_id, $msg), $phone, false);
                                           }
                                         }
-                                        else if(str_contains($last_message_out->message, "You are about to send MTN SME data worth of") && $last_message_in->message == "2")
+                                        else if(str_contains($last_message_out->message, "You are about to send SME data worth of") && $last_message_in->message == "2")
                                         {
                                           $msg = trim(strtolower($message));
                                           if(!$alreadyReplied)
@@ -657,7 +675,7 @@ $whatsapp_user_count = DB::table('whatsapp_cloud_users')
                                   {
                                     if(!$alreadyReplied)
                                     {
-                                      $this->SendTextMessage($messagesRes->openTopupearnAccount($phone, $name, $message_id), $phone, true);
+                                      $this->SendTextMessage($messagesRes->openTopupearnAccount($phone, $name, $message_id), $phone, false);
                                     }
                                   }
 

@@ -6,7 +6,6 @@ import BuyData from "./components/recharge/buyData";
 import BuySMEData from "./components/recharge/buySmeData";
 import BuyAirtime from "./components/recharge/buy_airtime";
 import ElectricityBill from "./components/recharge/electricityBill";
-import TopHeader from "./components/top_header";
 import ComingSoon from "./components/user-components/comingSoon";
 import Dashbaord from "./components/user-components/dashboard";
 import FundWallet from "./components/wallet-components/fundWallet";
@@ -14,15 +13,14 @@ import LoadVoucher from "./components/wallet-components/loadVoucher";
 import Transactions from "./components/wallet-components/transactions";
 import UserTemplateLayout from "./components/user-components/userTemplateLayout";
 import Wallet from "./components/wallet-components/wallet";
-import API from "./pages/api";
-import ForgotPassword from "./pages/auth/forgotPassword";
-import Login from "./pages/auth/login";
-import Register from "./pages/auth/register";
-import ContactUs from "./pages/contact";
-import FAQ from "./pages/faq";
-import Home from './pages/home';
-import Layout from "./pages/layout";
-import PageNotFound from "./pages/pageNotFound";
+import API from "./components/landing-components/pages/api";
+import ForgotPassword from "./components/landing-components/pages/auth/forgotPassword";
+import Login from "./components/landing-components/pages/auth/login";
+import Register from "./components/landing-components/pages/auth/register";
+import FAQ from "./components/landing-components/pages/faq";
+import Home from './components/landing-components/pages/home';
+import Layout from "./components/landing-components/pages/layout";
+import PageNotFound from "./components/landing-components/pages/pageNotFound";
 import UpgradePackage from "./components/user-components/upgrade";
 import VerifyTransaction from "./components/wallet-components/verityTransaction";
 import Referrals from "./components/networking-components/referrals";
@@ -39,9 +37,9 @@ import PrintAirtime from "./components/recharge/print_airtime";
 import ViewGeneratedAirtime from "./components/recharge/viewGeneratedAirtime";
 import CableSubscription from "./components/recharge/cableSubsription";
 import CashbackTransactions from "./components/wallet-components/cashback_transactions";
-import Packages from "./pages/packages";
-import Incentives from "./pages/incentives";
-import UnderMaintenance from "./pages/underMaintenance";
+import Packages from "./components/landing-components/pages/packages";
+import Incentives from "./components/landing-components/pages/incentives";
+import UnderMaintenance from "./components/landing-components/pages/underMaintenance";
 import PayElectricityBill from "./components/recharge/payElectricityBill";
 import ElectricityGeneratedToken from "./components/recharge/viewElectricityGeneratedToken";
 import BrowserNotSupported from "./components/user-components/BrowserNotSupported";
@@ -51,13 +49,16 @@ import AddBankAccount from "./components/user-components/addBankAccount";
 import BankAccount from "./components/user-components/bankAccount";
 import UserPackageCoupons from "./components/coupon-components/userPackageCoupons";
 import UserWalletCoupons from "./components/coupon-components/userWalletCoupon";
-import NavPages from "./components/NavPages";
-//import Presentation from "./components/topupearn-components/presentation";
 import ViewTransactions from "./components/wallet-components/viewTransaction";
 import Api from "./components/api-components/Api";
 import ManageAirtime from "./components/recharge/ManageAirtime";
 import AddAirtimePin from "./components/recharge/AddAirtimePin";
 import ViewGeneratedAirtimePublic from "./components/recharge/viewGeneratedAirtimePublic";
+import ContactUs from "./components/landing-components/pages/contact";
+import NavPages from "./components/landing-components/NavPages";
+import AboutUs from "./components/landing-components/pages/aboutUs";
+//import ContactUs from "./components/landing-components/pages/contact";
+
 
 function App() {
   return (
@@ -76,6 +77,7 @@ function App() {
           <Route path="/forgotpassword" element={<ForgotPassword />} />
           <Route path="/maintenance" element={<UnderMaintenance />} />
           <Route path="/navpages" element={<NavPages />} />
+          <Route path="/about" element={<AboutUs />} />
           <Route path="*" element={<PageNotFound />} />
         </Route>
         

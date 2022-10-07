@@ -123,7 +123,6 @@ class AuthController extends Controller
           $points = $package->points;
 
 
-
             $user_agent = $_SERVER['HTTP_USER_AGENT'];
             $ip_address = $_SERVER['REMOTE_ADDR'];
             DB::insert('insert into users (

@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/static/css/main.073c9b0a.css",
-    "main.js": "/static/js/main.2ae04809.js",
+    "main.js": "/static/js/main.bad7436c.js",
     "static/js/787.24ee0ee7.chunk.js": "/static/js/787.24ee0ee7.chunk.js",
     "static/media/recharge_card_rate.mp4": "/static/media/recharge_card_rate.cdc10f4ba8043abb28be.mp4",
     "static/media/voicesms.png": "/static/media/voicesms.d34e3a0c0c3c3b79575a.png",
@@ -22,6 +22,7 @@
     "static/media/9mobile.jpg": "/static/media/9mobile.754d2322e13ec6d6cd12.jpg",
     "static/media/mtn.jpg": "/static/media/mtn.6a53d2128573ea45374b.jpg",
     "static/media/ibedc.jpg": "/static/media/ibedc.7d9f112c39d116fb7edd.jpg",
+    "static/media/whatsapp_logo.png": "/static/media/whatsapp_logo.9c3b8fcc89e892e48a81.png",
     "static/media/gotv.jpg": "/static/media/gotv.d8627e9c9d449c5eb2ac.jpg",
     "static/media/phedc.jpg": "/static/media/phedc.9545c1b1811f055c6035.jpg",
     "static/media/kdedc.jpg": "/static/media/kdedc.736bffc447800db0f9b6.jpg",
@@ -34,11 +35,11 @@
     "static/media/mtn_logo.png": "/static/media/mtn_logo.7e5128e83a194e1da046.png",
     "index.html": "/index.html",
     "main.073c9b0a.css.map": "/static/css/main.073c9b0a.css.map",
-    "main.2ae04809.js.map": "/static/js/main.2ae04809.js.map",
+    "main.bad7436c.js.map": "/static/js/main.bad7436c.js.map",
     "787.24ee0ee7.chunk.js.map": "/static/js/787.24ee0ee7.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.073c9b0a.css",
-    "static/js/main.2ae04809.js"
+    "static/js/main.bad7436c.js"
   ]
 }

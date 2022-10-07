@@ -1,12 +1,9 @@
 import React, { Component, useEffect, useState } from 'react';
 
-import images from '../../constants/images';
-import logos from '../../constants/logos';
 import NumberToNaira from '../../constants/numberToNaira';
-import urls from '../../constants/urls';
-import dateFormat, { masks } from "dateformat";
 import { Link } from 'react-router-dom';
 import Mask from '../../utilities/MaskCardNumber';
+import urls from '../../constants/urls';
 
 const ManageAirtime = () => {
 

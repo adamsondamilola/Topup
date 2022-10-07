@@ -16,90 +16,259 @@ class WABAMessageTemplateController extends Controller
 
   private $topUpDomain = "https://topupearn.com/";
   private $topUpDomainApi = "https://api.topupearn.com/api/v1/";
+  private $topUpDomainApi2 = "https://api.topupearn.com/api/";
   private $globalStatus = 0;
 
-    public function checkForRepetition($message, $phone)
-    {
-            $last_message_out = DB::table('whatsapp_cloud_messages')
-            ->Where('phone', $phone)
-            ->Where('message_type', 'outbound')
-            ->orderBy('id', 'desc')
-            ->first();
-            if($last_message_out->message != $message)
-            {
-                return $message;
-            }
-            else
-            {
-                return null;
-            }
+  //create new account
+  public function signup($phone, $name, $message_id, $msg)
+  {
+    $role = "User";
 
-    }
+    $email = substr($phone, 3);
+    $email = "0".$email;
 
+      $package = "Free Account";
+      $username = Str::random(15);
+      $phone = "+".$phone;
 
-    public function buyAirtimeVtuApi($beneficiary, $amount, $network, $phone, $token)
-    {
+      $ifPhoneExists = DB::table('users')
+      ->Where('phone', $phone)
+      ->count();
 
-        $data = [
-            "network" => $network,
-            'amount' => $amount,
-            'phone' => $beneficiary,
-            'token' => $token
-        ];
+      $ifUsernameExists = DB::table('users')
+      ->Where('username', $username)
+      ->count();
 
-        //last vtu order
-        $pending_vtu = DB::table('whatsapp_vtu')
-        ->Where('beneficiary', $beneficiary)
-        ->Where('phone', $phone)
-        ->Where('status', 0)
-        ->orderBy('id', 'desc')
+      if($ifUsernameExists > 0)
+      {
+        return 'Registration failed. Please, try again';
+
+      }
+      else if($ifPhoneExists > 0){
+      return "Phone number already exists";
+      }
+      else
+      {
+
+        $web_settings = DB::table('website_settings')
+        ->Where('id', 1)
         ->first();
 
-        //delete other pending orders
-        DB::table('whatsapp_vtu')
-        ->Where('status', 0)
-        ->Where('phone', $phone)
-        ->Where('id', '!=', $pending_vtu->id)
-        ->delete();
-  //return "text test";
-  if($pending_vtu->status == 0)
-  {
-  $url = $this->topUpDomainApi."recharge/buy_airtime";
-        // Initializes a new cURL session
-        $curl = curl_init($url);
-        // Set the CURLOPT_RETURNTRANSFER option to true
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-        // Set the CURLOPT_POST option to true for POST request
-        curl_setopt($curl, CURLOPT_POST, true);
-        // Set the request data as JSON using json_encode function
-        curl_setopt($curl, CURLOPT_POSTFIELDS,  json_encode($data));
-        // Set custom headers for RapidAPI Auth and Content-Type header
-        curl_setopt($curl, CURLOPT_HTTPHEADER, [
-            'Content-Type: application/json',
-          //  'Authorization: Bearer '.$this->accessToken
+        $package_amount = 0;
+        $points = 0;
+/*
+        $package = DB::table('packages')
+        ->Where('type', $web_settings->package_type)
+        ->Where('package', $package)
+        ->first();
+        */
+
+        $package_amount = 0;
+        $points = 0;
+
+          DB::insert('insert into users (
+              first_name,
+              phone,
+              email,
+              username,
+              device_info,
+              country,
+              package,
+              package_amount,
+              role
+              )
+          values (?, ?, ?, ?, ?, ?, ?, ?, ?)', [
+              $name,
+              $phone,
+              $email,
+              $username,
+              "Whatsapp",
+              "Nigeria",
+              $package,
+              0,
+              $role
           ]);
-        // Execute cURL request with all previous settings
-        $response = curl_exec($curl);
-        $json_obj   = json_decode($response);
-                      //$response = $json_obj->status;
-        // Close cURL session
-        curl_close($curl);
 
-        if($json_obj->status == 1){
-             DB::update('update whatsapp_vtu set status = ? where id = ? and beneficiary = ? limit 1',[1, $pending_vtu->id, $beneficiary]);
-             return $json_obj->message;
-        }
-        else
-        {
-            //$send_mail = $this->sendMail("WABA Error", $this->email, "no_reply@topupearn.com", $json_obj->message);
-            return $json_obj->message;
-        }
-   }
-   else{
-       return "Transaction failed. Please try again.";
-   }
+//Create wallet
+DB::insert('insert into wallet (username)values (?)', [$username]);
 
-    }
+if( $package_amount > 0){
+  DB::insert('insert into transactions (
+      username,
+      type,
+      amount,
+      discount,
+      package
+      )
+  values (?, ?, ?, ?, ?)', [
+      $username,
+      'Package',
+      0,
+      0,
+      $package
+  ]);
+}
+
+//create bank account
+if($this->createBankAccount($username) == "Account Created!")
+{
+
+  $flutterwave = DB::table('flutterwave_accounts')
+  ->Where('username', $username)
+  ->first();
+
+  $message = "Hi ".$name."\n\nWe are indeed glad to have you onboard. \n\nTransactions on our chatbot does not take more a minute to get processed\n\nTo fund your wallet, kindly use the account details below\n\n";
+  $message .= "*Bank Account Details*\n";
+  $message .= "Account Number: *".$flutterwave->account_number."*\n";
+  $message .= "Account Name: *".$flutterwave->account_name."*\n";
+  $message .= "Bank Name: *".$flutterwave->bank_name."*\n\n";
+  $message .= "Kind Regards!";
+  return $message;
+}
+else
+{
+    /*
+    $ifUsernameExists = DB::table('users')
+      ->Where('username', $username)
+      ->count();
+      */
+
+  return "Account created, but we are unable to create a bank account for you at the moment."; ////$this->createBankAccount($username); //
+}
+
+      }
+  }
+
+
+  public function createBankAccount($username)
+  {
+
+      $data = [
+          "username" => $username,
+          'email' => "support@topupearn.com"
+      ];
+
+if($username != "")
+{
+$url = $this->topUpDomainApi2."flutterwave/reserveFlutterwaveAccount";
+      // Initializes a new cURL session
+      $curl = curl_init($url);
+      // Set the CURLOPT_RETURNTRANSFER option to true
+      curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+      // Set the CURLOPT_POST option to true for POST request
+      curl_setopt($curl, CURLOPT_POST, true);
+      // Set the request data as JSON using json_encode function
+      curl_setopt($curl, CURLOPT_POSTFIELDS,  json_encode($data));
+      // Set custom headers for RapidAPI Auth and Content-Type header
+      curl_setopt($curl, CURLOPT_HTTPHEADER, [
+          'Content-Type: application/json',
+        //  'Authorization: Bearer '.$this->accessToken
+        ]);
+      // Execute cURL request with all previous settings
+      $response = curl_exec($curl);
+      $json_obj   = json_decode($response);
+      curl_close($curl);
+
+      if($json_obj == null){
+           return $response;
+      }
+      else if($json_obj->status == 1){
+           return $json_obj->message;
+      }
+      else
+      {
+          return $json_obj->message;
+      }
+ }
+ else{
+     return "Failed to create bank account number. Please try again.";
+ }
+  }
+
+
+      public function checkForRepetition($message, $phone)
+      {
+              $last_message_out = DB::table('whatsapp_cloud_messages')
+              ->Where('phone', $phone)
+              ->Where('message_type', 'outbound')
+              ->orderBy('id', 'desc')
+              ->first();
+              if($last_message_out->message != $message)
+              {
+                  return $message;
+              }
+              else
+              {
+                  return null;
+              }
+
+      }
+
+
+      public function buyAirtimeVtuApi($beneficiary, $amount, $network, $phone, $token)
+      {
+
+          $data = [
+              "network" => $network,
+              'amount' => $amount,
+              'phone' => $beneficiary,
+              'token' => $token
+          ];
+
+          //last vtu order
+          $pending_vtu = DB::table('whatsapp_vtu')
+          ->Where('beneficiary', $beneficiary)
+          ->Where('phone', $phone)
+          ->Where('status', 0)
+          ->orderBy('id', 'desc')
+          ->first();
+
+          //delete other pending orders
+          DB::table('whatsapp_vtu')
+          ->Where('status', 0)
+          ->Where('phone', $phone)
+          ->Where('id', '!=', $pending_vtu->id)
+          ->delete();
+    //return "text test";
+    if($pending_vtu->status == 0)
+    {
+    $url = $this->topUpDomainApi."recharge/buy_airtime";
+          // Initializes a new cURL session
+          $curl = curl_init($url);
+          // Set the CURLOPT_RETURNTRANSFER option to true
+          curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+          // Set the CURLOPT_POST option to true for POST request
+          curl_setopt($curl, CURLOPT_POST, true);
+          // Set the request data as JSON using json_encode function
+          curl_setopt($curl, CURLOPT_POSTFIELDS,  json_encode($data));
+          // Set custom headers for RapidAPI Auth and Content-Type header
+          curl_setopt($curl, CURLOPT_HTTPHEADER, [
+              'Content-Type: application/json',
+            //  'Authorization: Bearer '.$this->accessToken
+            ]);
+          // Execute cURL request with all previous settings
+          $response = curl_exec($curl);
+          $json_obj   = json_decode($response);
+                        //$response = $json_obj->status;
+          // Close cURL session
+          curl_close($curl);
+
+          if($json_obj->status == 1){
+               DB::update('update whatsapp_vtu set status = ? where id = ? and beneficiary = ? limit 1',[1, $pending_vtu->id, $beneficiary]);
+               return $json_obj->message;
+          }
+          else
+          {
+              //$send_mail = $this->sendMail("WABA Error", $this->email, "no_reply@topupearn.com", $json_obj->message);
+              return $json_obj->message;
+          }
+     }
+     else{
+         return "Transaction failed. Please try again.";
+     }
+
+      }
+
 
     public function buyAirtimePinApi($quantity, $amount, $network, $phone, $token)
     {
@@ -128,7 +297,7 @@ class WABAMessageTemplateController extends Controller
   //return "text test";
   if($pending_airtime_epin->status == 0)
   {
-        $url = $this->topUpDomainApi."recharge/print_airtime";
+  $url = $this->topUpDomainApi."recharge/print_airtime";
         // Initializes a new cURL session
         $curl = curl_init($url);
         // Set the CURLOPT_RETURNTRANSFER option to true
@@ -149,18 +318,19 @@ class WABAMessageTemplateController extends Controller
         // Close cURL session
         curl_close($curl);
 
-        if($json_obj->status == 1)
-        {
+        if($json_obj->status == 1){
 
 $token = Str::random(80);
-DB::update('update whatsapp_airtime_epin set status = ?, token = ? where id = ? and phone = ? limit 1',[1, $token, $pending_airtime_epin->id, $phone]);
+
+             DB::update('update whatsapp_airtime_epin set status = ?, token = ? where id = ? and phone = ? limit 1',[1, $token, $pending_airtime_epin->id, $phone]);
 $message = "";
 $decrypt = new EncryptController;
 
 $message .= $json_obj->pins;
 $message .= "To print airtime PIN, kindly click the link below.\n";
 $message .= $this->topUpDomain."user/".$json_obj->airtime_id."/".$token."/airtime/print";
-return $message;
+
+             return $message;
 
         }
         else
@@ -702,7 +872,7 @@ $url = $this->topUpDomainApi."recharge/verify_meter";
     $message .= "1. *Laundry Service*\n";
     $message .= "2. *Track Laundry Order*\n";
     $message .= "3. *Internet Data*\n";
-    $message .= "4. *MTN SME Data*\n";
+    $message .= "4. *SME Data*\n";
     $message .= "5. *Airtime (VTU)*\n";
     $message .= "6. *Print Airtime*\n";
     $message .= "7. *Cable TV*\n";
@@ -722,7 +892,7 @@ $url = $this->topUpDomainApi."recharge/verify_meter";
     $message .= "\n_laundry_ - *Laundry Service*";
     $message .= "\n_track_ - *Track Laundry Order*";
     $message .= "\n_data_ - *Internet Data*";
-    $message .= "\n_sme_ - *MTN SME Data*";
+    $message .= "\n_sme_ - *SME Data*";
     $message .= "\n_airtime_ - *Airtime (VTU)*";
     $message .= "\n_print_ - *Print Airtime*";
     $message .= "\n_tv_ - *Cable TV*";
@@ -738,17 +908,18 @@ $url = $this->topUpDomainApi."recharge/verify_meter";
 
   public function noTopupearnAccount($phone, $name, $message_id)
   {
-      $message = "Sorry, no top up earn account is linked to this number. Kindly signup or request for your phone number update if you already have an account.\n\n";
-      $message .= $this->topUpDomain."register";
-      $this->saveMessage($phone, $name, $message, $message_id);
+      $message = "Opps!!! Seems its your first time using this service. \n\nKindly wait for 1 minute while we create an account for you....\n\nYou won't go through this stress again.\n\n";
+      $message .= "Enter *1* to proceed or ignore if you do not want to open an account.\n";
+      $message .= "1. *Proceed*";
+      //$this->saveMessage($phone, $name, $message, $message_id);
       return $message;
   }
 
   public function openTopupearnAccount($phone, $name, $message_id)
   {
-    $message = "Topup earn is an online bill payment platform. You will be able to use this service if you have an account registered with this *".$phone."*. Kindly click the link below to get started. \n\n";
-    $message .= $this->topUpDomain."register";
-
+    $message = "Kindly wait for 1 minute while we create an account for you...\n\n";
+    $message .= "Enter *1* to proceed or ignore if you do not want to open an account.\n";
+      $message .= "1. *Proceed*";
       $this->saveMessage($phone, $name, $message, $message_id);
       return $message;
   }
@@ -1001,7 +1172,7 @@ else if(str_contains($last_message_out->message, "You are about to send airtime"
               $message = "You selected *".$network." airtime pin*. Please, enter amount\n";
               $message .= "*100*\n";
               $message .= "*200*\n";
-              $message .= "*400* (MTN ONLY)\n";
+              //$message .= "*400* (MTN ONLY)\n";
               $message .= "*500*\n";
               $message .= "*1000*\n";
 
@@ -1262,7 +1433,7 @@ else if(str_contains($last_message_out->message, "You are about to send data wor
 
 
 
-  //buy mtn sme data ---
+  //buy sme data ---
   public function buyMtnSmeData($phone, $name, $message_id, $msg)
   {
     $message = "";
@@ -1284,16 +1455,14 @@ else if(str_contains($last_message_out->message, "You are about to send data wor
             ->orderBy('id', 'desc')
             ->first();
 
-  /*
+
             if($msg == "4" || $msg == "sme")
             {
                 if($this->checkUserByphone($phone))
                 {
-                      $message = "Enter a number from the list of data providers below";
+                      $message = "Enter a number from the list of SME Data providers below";
                       $message .= "\n1. *MTN*";
-                      $message .= "\n2. *GLO*";
-                      $message .= "\n3. *AIRTEL*";
-                      $message .= "\n4. *9MOBILE*";
+                      $message .= "\n2. *AIRTEL*";
                 }
                 else
                 {
@@ -1302,17 +1471,15 @@ else if(str_contains($last_message_out->message, "You are about to send data wor
 
 
             }
-            */
 
-            if($msg == "4" || $msg == "sme")
+
+            if(str_contains($last_message_out->message, "Enter a number from the list of SME Data providers below"))
             {
-                $network = "MTN";
-                /*
               if(trim($last_message_in->message) == "1") $network = "MTN";
-              else if(trim($last_message_in->message) == "2") $network = "GLO";
-              else if(trim($last_message_in->message) == "3") $network = "AIRTEL";
-              else if(trim($last_message_in->message) == "4") $network = "9MOBILE";
-              */
+              //else if(trim($last_message_in->message) == "2") $network = "GLO";
+              else if(trim($last_message_in->message) == "2") $network = "AIRTEL";
+              //else if(trim($last_message_in->message) == "4") $network = "9MOBILE";
+
               //else return "You entered an invalid command";
 
   //insert order for whatsapp vtu
@@ -1322,8 +1489,6 @@ else if(str_contains($last_message_out->message, "You are about to send data wor
               values (?, ?)', [
                   $phone, $network
               ]);
-
-  //if(!is_numeric(trim($last_message_in->message))) $message = "You entered an invalid command. Please try again.";
 
 if($insert)
 {
@@ -1382,7 +1547,7 @@ if(str_contains($last_message_out->message, "Data (SME)*. Please, select a packa
 
         DB::update('update whatsapp_vtu set network = ?, amount = ? where id = ?',[$data_billing->data_code, $data_billing->data_amount, $pending_vtu->id]);
 
-    $message = "Type *self* if you want to recharge ".$phone." or enter phone number of beneficiary for MTN SME data.";
+    $message = "Type *self* if you want to recharge ".$phone." or enter phone number of beneficiary for the SME data.";
   }
   else
 {
@@ -1392,7 +1557,7 @@ if(str_contains($last_message_out->message, "Data (SME)*. Please, select a packa
   }
   }
 
-  if(str_contains($last_message_out->message, " or enter phone number of beneficiary for MTN SME data"))
+  if(str_contains($last_message_out->message, " or enter phone number of beneficiary for the SME data"))
   {
   $beneficiary = $last_message_in->message;
   if(trim(strtolower($beneficiary)) != "self" && !is_numeric($beneficiary))
@@ -1409,7 +1574,7 @@ if(str_contains($last_message_out->message, "Data (SME)*. Please, select a packa
       ->first();
 
   DB::update('update whatsapp_vtu set beneficiary = ? where id = ?',[$beneficiary, $pending_vtu->id]);
-  $message = "You are about to send MTN SME data worth of *".$pending_vtu->amount." NGN* to *".$beneficiary."*.\nEnter 1 to proceed, 2 to cancel\n";
+  $message = "You are about to send SME data worth of *".$pending_vtu->amount." NGN* to *".$beneficiary."*.\nEnter 1 to proceed, 2 to cancel\n";
   $message .= "1. *Proceed*\n";
   $message .= "2. *Cancel*";
   }
@@ -1425,7 +1590,7 @@ if(str_contains($last_message_out->message, "Data (SME)*. Please, select a packa
       ->first();
 
   DB::update('update whatsapp_vtu set beneficiary = ? where id = ?',[$beneficiary, $pending_vtu->id]);
-  $message = "You are about to send MTN SME data worth of *".$pending_vtu->amount." NGN* to *".$beneficiary."*.\nEnter 1 to proceed, 2 to cancel\n";
+  $message = "You are about to send SME data worth of *".$pending_vtu->amount." NGN* to *".$beneficiary."*.\nEnter 1 to proceed, 2 to cancel\n";
   $message .= "1. *Proceed*\n";
   $message .= "2. *Cancel*";
   }
@@ -1435,7 +1600,7 @@ if(str_contains($last_message_out->message, "Data (SME)*. Please, select a packa
   }
   }
 
-  if(str_contains($last_message_out->message, "You are about to send MTN SME data worth of") && $last_message_in->message == "1")
+  if(str_contains($last_message_out->message, "You are about to send SME data worth of") && $last_message_in->message == "1")
   {
     $pending_vtu = DB::table('whatsapp_vtu')
     ->Where('phone', $phone)
@@ -1446,7 +1611,7 @@ if(str_contains($last_message_out->message, "Data (SME)*. Please, select a packa
     $message = $this->buyMtnSmeDataApi($pending_vtu->beneficiary, $pending_vtu->amount, $pending_vtu->network, $phone, $this->getUserApiTokenByPhone($phone));
 
   }
-  else if(str_contains($last_message_out->message, "You are about to send MTN SME data worth of") && $last_message_in->message == "2")
+  else if(str_contains($last_message_out->message, "You are about to send SME data worth of") && $last_message_in->message == "2")
     {
       $message = "You canceled your order. If you need more services, simply say *Hi*.";
     }
@@ -1454,7 +1619,7 @@ if(str_contains($last_message_out->message, "Data (SME)*. Please, select a packa
       $this->saveMessage($phone, $name, $message, $message_id);
       return $message;
   }
-  //buy mtn sme data -->
+  //buy sme data -->
 
 
   //buy electricity ---
@@ -1483,7 +1648,9 @@ if(str_contains($last_message_out->message, "Data (SME)*. Please, select a packa
             if($msg == "8" || $msg == "power")
             {
 
-              DB::insert('insert into whatsapp_utility_bills (
+if($this->checkUserByphone($phone))
+                {
+                      DB::insert('insert into whatsapp_utility_bills (
                       phone, type
                       )
                   values (?, ?)', [
@@ -1500,6 +1667,14 @@ if(str_contains($last_message_out->message, "Data (SME)*. Please, select a packa
   {
     $message .= $packages->id.". *".$packages->product."*\n\n";
   }
+
+                }
+                else
+                {
+                   $message = $this->noTopupearnAccount($phone, $name, $message_id);
+                }
+
+
 }
 
 

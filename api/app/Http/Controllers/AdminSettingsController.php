@@ -1196,12 +1196,13 @@ public function deleteQuestion(Request $request, $login_token, $id){
 public function addAirtimePin(Request $request){
   $validator = Validator::make($request->all(), [
       'login_token' => 'required|string',
-      'pin' => 'required|numeric',
+      'pin' => 'required|string',
       'serial_number' => 'required|numeric',
       'network' => 'required|string',
       'amount' => 'required|numeric'
     ]);
 
+    $request->pin = str_replace("-", "", $request->pin);
     $original_pin = $request->pin;
 
 
@@ -1240,11 +1241,11 @@ public function addAirtimePin(Request $request){
                             }
 
     $token_check = $this->check_login_token($request->login_token);
-     if($validator->fails()){
-      //return $validator->errors();
-                return response()->json(['status' => 0, 'message' => 'An error occured, please try again. Make sure all fields are correctly filled.' ], 401);
-            }
-            else if($check_pin){
+     
+             if(!is_numeric($original_pin)){
+              return response()->json(['status' => 0, 'message' => 'PIN is not numeric' ], 401);
+          }
+          else if($check_pin){
               return response()->json(['status' => 0, 'message' => 'PIN already exists' ], 401);
           }
           else if($check_serial_number){
@@ -1253,6 +1254,10 @@ public function addAirtimePin(Request $request){
         else if(strlen($original_pin) > $pin_length || strlen($original_pin) < $pin_length){
           return response()->json(['status' => 0, 'message' => $network.' should not be more or less than '.$pin_length ], 401);
       }
+      else if($validator->fails()){
+      //return $validator->errors();
+                return response()->json(['status' => 0, 'message' => 'An error occured, please try again. Make sure all fields are correctly filled.' ], 401);
+            }
   else if($token_check != 0)
   {
 

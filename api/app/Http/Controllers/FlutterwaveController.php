@@ -19,12 +19,15 @@ class FlutterwaveController extends Controller
 
         $validator = Validator::make($request->all(), [
             'username' => 'required|string',
-            'email' => 'required|string'
+            'email' => 'required|string',
+            'phone' => 'required|string',
         ]);
 
         $user = DB::table('users')
         ->Where('username', $request->username)
         ->first();
+
+        $request->phone = $user->phone;
 
         $monnify = DB::table('monnify')
         ->Where('username', $request->username)
@@ -33,8 +36,16 @@ class FlutterwaveController extends Controller
         $flutterwave = DB::table('flutterwave_accounts')
         ->Where('username', $request->username)
         ->count();
-
-       if($monnify < 1 && $flutterwave < 1)
+/*
+if($validator->fails()){
+  //return $validator->errors();
+            return response()->json(['status' => 0, 'message' => 'An error occured, please try again. Make sure all fields are correctly filled.' ], 401);
+        }*/
+ if(!$user)
+{
+ return response()->json(['status' => 0, 'message' => "Username not found"], 401);
+}
+       else if($user && $monnify < 1 && $flutterwave < 1)
         {
         $api_keys = DB::table('api_keys')
         ->Where('api_provider', 'flutterwave')
@@ -46,15 +57,23 @@ class FlutterwaveController extends Controller
 
         $password = $api_keys->api_secret_key;
 
+        $fname = $user->first_name;
+        $lname = $user->last_name;
+
+        if($lname == null || $lname == "")
+        {
+          //$fname = "WhatsApp";
+          $lname = "Topup";
+        }
 
         $data = [
             "tx_ref" => Str::random(25),
   "email" => $request->email,
   "phonenumber" => $request->phone,
 	"bvn" => $api_keys->bvn,
-  "firstname" => $user->first_name,
-  "lastname" => $user->last_name,
-  "narration" => $user->first_name.' '.$user->last_name,
+  "firstname" => $fname,
+  "lastname" => $lname,
+  "narration" => $fname.' '.$lname,
 	"is_permanent" => true
         ];
 
@@ -98,7 +117,7 @@ else if($json_obj->status == "success"){
         $request->username,
         $json_obj->data->bank_name,
         $json_obj->data->response_code,
-        $user->first_name.' '.$user->last_name,
+        $fname.' '.$lname,
         $json_obj->data->account_number,
         $json_obj->data->order_ref,
 

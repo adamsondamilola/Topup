@@ -21,7 +21,7 @@ const RegistrationForm = () => {
 
    const countryAndDialCodes = [
     { label: "+234", value: "Nigeria" },
-    { label: "+93", value: "Afghanistan" },
+/*    { label: "+93", value: "Afghanistan" },
         { label: "+355", value: "Albania" },
         { label: "+213", value: "Algeria" },
         { label: "+1", value: "American Samoa" },
@@ -255,7 +255,7 @@ const RegistrationForm = () => {
         { label: "+681", value: "Wallis & Futuna" },
         { label: "+967", value: "Yemen" },
         { label: "+260", value: "Zambia" },
-        { label: "+263", value: "Zimbabwe" }
+        { label: "+263", value: "Zimbabwe" } */
       ];
     
     //const [loginToken, setLoginToken] = useState(randomString);
@@ -481,7 +481,7 @@ const loginAction = () =>{
                 {referrer == null || referrer == "" ?
                             <div class="col-12 mt-3">
                                 <div class="form-group">
-                                    <label>Sponsor</label>
+                                    <label>Sponsor (Optional)</label>
                                     <input class="form-control" 
                                     type="text" 
                                     onChange={e => setSponsor(e.target.value)} 
