@@ -43,43 +43,30 @@ import urls from '../../constants/urls';
 
        else{
 
-        return <section className="hero-slider-area">
-        <div className="hero-slider owl-theme"  data-slider-id="1">
-            <div className="hero-slider-item">
-                <div className="d-table">
-                    <div className="d-table-cell">
-                        <div className="container">
-                            <div className="row align-items-center">
-                                <div className="col-lg-7">
-                                    <div className="hero-slider-content text-white">
-                                        <h1 className="text-white">Welcome to {title}</h1>
-                                        <h4 className="text-white">Earn huge commission as a paypoint vendor </h4><br/>
-                                        <p className="text-white">Leverage on opportunities in local & global telecom sectors & digital economy.</p>
-            
-                                        <div className="slider-btn">
-                                      
-                                            <div onClick={() => setPlayVideo(true)} className="popup-youtube play-video">
-                                                <i className="flaticon-play-button"></i>
-                                                <span className="text-white">Play video</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-        
-                                <div className="col-lg-5">
-                                    <div className="slider-img">
-                                        <img src="assets/images/slider/app.jpg" alt="Image" />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>    
+        return <section class="home-bg h-100vh" id="home">
+        <div class="bg-overlay"></div>
+        <div class="home-table">
+        <div class="home-table-center">
+        <div class="container">
+        <div class="row">
+         <div class="col-lg-12">
+        <div class="text-white text-center">
+        <div class="small_title">
+        <span>Topup Earn</span>
+        </div>
+        <h1 class="header_title mx-auto mt-4 mb-0 font-weight-bold"><div class="simple-text-rotate">Premium VTU Services.</div></h1>
+        <p class="header_subtitle mx-auto pt-4 mb-0 pb-2 text-white">Take advantage of our quality VTU services and get returns on every transactions.</p>
+        <div class="header_btn mt-3">
+        <a href="/login" class="btn btn-custom mr-3">Get Started</a>
+        </div>
+        </div>
+        </div>
+        </div>
+        </div>
+        </div>
         </div>
         </section>
        }
-       // {playVideo ? <VideoView/> : <SliderView /> }
 
 }
 export default Slider;

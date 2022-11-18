@@ -59,12 +59,17 @@ class ActivationController extends Controller
 //  $points = $package->points;
 
 $f1 = 0;
-$f1 = 40/100;
-$f1 = $amount * $f1;
+//$f1 = 40/100;
+//$f1 = $amount * $f1;
 
 $my_share = 0;
 if($amount == 5000){
-  $my_share = 600;
+  $my_share = 1000;
+  $f1 = 2000;
+}
+else if($amount == 100000){
+  $my_share = 10000;
+  $f1 = 10000;
 }
 //$my_share = $my_share * $amount;
 
@@ -1331,8 +1336,4 @@ public function activateAccount($upline_username, $my_username, $my_package)
     return $this->calculate_multi_level_earnings($upline_username, $my_username, $my_package);
   }
 }
-
-
-
-
 }

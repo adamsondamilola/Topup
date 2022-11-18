@@ -389,16 +389,24 @@ const loginAction = () =>{
                 .finally(() => setLoading(false));
 }
 
-        return <div class="container bg-white">
-        <div class="row justify-content-center text-center d-flex">
-            
-            <div class="col-lg-6">
-                <div class="user-form-content">
-
-                    <form>
+        return <section class="section bg-funfact" id="register"> 
+            <div class="container card">
+           
                         <div class="row">
-
-                        <div class="col-12 mt-3">
+                        <div class="col-md-12 mt-3">
+                        <div class="text-center section_title">
+			<p class="sec_small_title text-custom font-weight-bold mb-1">Sign Up</p>
+			<h3 class="font-weight-bold mb-0">New User Registration Form</h3>
+			<div class="section_title_border">
+			<div class="f-border"></div>
+			<div class="f-border"></div>
+			<div class="s-border"></div>
+			<div class="f-border"></div>
+			<div class="f-border"></div>
+			</div>
+            </div>
+                        </div>
+                        <div class="col-md-6 mt-3">
                                 <div class="form-group">
                                     <label>First Name</label>
                                     <input 
@@ -409,7 +417,7 @@ const loginAction = () =>{
                                 </div>
                             </div>
 
-                            <div class="col-12 mt-3">
+                            <div class="col-md-6 mt-3">
                                 <div class="form-group">
                                     <label>Last Name</label>
                                     <input 
@@ -420,7 +428,7 @@ const loginAction = () =>{
                                 </div>
                             </div>                            
 
-                        <div class="col-12 mt-3">
+                        <div class="col-md-6 mt-3">
                                 <div class="form-group">
                                     <label>Email</label>
                                     <input class="form-control" 
@@ -431,7 +439,7 @@ const loginAction = () =>{
                                 </div>
                             </div>
 
-                            <div class="col-12 mt-3">
+                            <div class="col-md-6 mt-3">
                                 <div class="form-group">
                                     <label>Select Country</label>
                                     <select class="form-control" onChange={(e) => {setCountry(e.target.value); getCountryCode(e.target.value)} }>
@@ -446,7 +454,7 @@ const loginAction = () =>{
 
                             {country != null ? 
                             
-                            <div class="col-12 mt-3">
+                            <div class="col-md-6 mt-3">
                                 <div class="form-group">
                                     <label>Phone</label>
                                     <div className="input-group">
@@ -464,7 +472,7 @@ const loginAction = () =>{
                             : null}
 
                             {country != null ? 
-                            <div class="col-12 mt-3">
+                            <div class="col-md-6 mt-3">
                                 <div class="form-group">
                                     <label>Select Package</label>
                                     <select class="form-control" onChange={e => setPackage(e.target.value)}>
@@ -479,7 +487,7 @@ const loginAction = () =>{
                             : null}
 
                 {referrer == null || referrer == "" ?
-                            <div class="col-12 mt-3">
+                            <div class="col-md-6 mt-3">
                                 <div class="form-group">
                                     <label>Sponsor (Optional)</label>
                                     <input class="form-control" 
@@ -490,7 +498,7 @@ const loginAction = () =>{
                                 </div>                                
                             </div>
                   : 
-                  <div class="col-12 mt-3">
+                  <div class="col-md-6 mt-3">
                                 <div class="form-group">
                                     <label>Sponsor</label>
                                     <input class="form-control" 
@@ -501,13 +509,13 @@ const loginAction = () =>{
                                 </div>                                
                             </div>
                             }          
-                            <div class="col-12 mt-3">
+                            <div class="col-md-12 mt-3">
                                 <div class="form-group">
                                     <b>Login Details</b>
                                 </div>                                
                             </div>
 
-                            <div class="col-12 mt-3">
+                            <div class="col-md-6 mt-3">
                                 <div class="form-group">
                                     <label>Username</label>
                                     <input class="form-control" 
@@ -518,7 +526,7 @@ const loginAction = () =>{
                                 </div>                                
                             </div>
 
-                            <div class="col-12 mt-3">
+                            <div class="col-md-6 mt-3">
                                 <div class="form-group">
                                     <label>Password</label>
                                     <input class="form-control" 
@@ -528,7 +536,7 @@ const loginAction = () =>{
                                 </div>                                
                             </div>
 
-                            <div class="col-12 mt-3">
+                            <div class="col-md-6 mt-3">
                                 <div class="form-group">
                                     <label>Confirm Password</label>
                                     <input 
@@ -540,9 +548,9 @@ const loginAction = () =>{
                             </div>
 
 {errMsg != null? <ErrorMessage message={errMsg}/> : null  }
-                            <div class="col-12 mt-3">                            
+                            <div class="col-md-12 mt-3">                            
                                 {isLoading? <LoadingImage /> :
-                                <button class="default-btn register" onClick={() => register()} type="button">
+                                <button class="btn btn-success btn-block" onClick={() => register()} type="button">
                                 Register
                             </button>
                             }
@@ -552,15 +560,8 @@ const loginAction = () =>{
                                 <p class="create">Already have an account? <Link to="/login">Log in</Link></p>
                             </div>
                         </div>
-                    </form>
-                </div>
-            </div>
-            <div class="col-lg-12">
-                
-            </div>
         </div>
-    </div>
-
+</section>
 }
 
 export default RegistrationForm;

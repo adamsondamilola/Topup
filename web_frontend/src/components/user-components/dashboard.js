@@ -397,6 +397,7 @@ const Dashbaord = () => {
               </div>
 
 {userData.package == "Free Account" ? 
+<div class="col-xl-12 col-lg-12">
           <div className='card'>
           <div class="box-body text-center">
                           <div class="d-flex justify-content-around">
@@ -412,6 +413,7 @@ const Dashbaord = () => {
                               </div>
                           </div>
                       </div>                      
+          </div>
           </div>
          : '' }
 

@@ -97,44 +97,37 @@ const services = [
     },
 ]
     
-export default class OurServices extends Component {
-    render() {
-        return <section class="services-area bg-color-e9f7fe pt-100 pb-70">
+const OurServices = () => {
+
+    return <section class="section bg-light" id="services">
         <div class="container">
-            <div class="section-title section-title-mb">
-               
-                <h2>Get Amazing Discount</h2>
-            </div>
-
+          
             <div class="row">
+			<div class="col-lg-12">
+			<div class="text-center section_title">
+            <h3 class="font-weight-bold mb-0">Services</h3>
+            <div class="section_title_border">
+<div class="f-border"></div>
+<div class="f-border"></div>
+<div class="s-border"></div>
+<div class="f-border"></div>
+<div class="f-border"></div>
+</div>
+            </div>
+            </div>
             {services.map(x =>
-                <div class="col-lg-3 col-md-6">
+                <div class="col-lg-3 col-md-6  mt-5">
                     <div class="single-services-box-wrap">
-                        <div class="single-services box card-bg top-content">
-                        <img src={x.img} />
-                            <h3>
-                                <a href="services-details.html">{x.service}</a>
-                            </h3>
-                            <p> <div class="shape shape-1">
-        </div></p>
-                        </div>
-
-                        <div class="single-services box card-bg bg-2 bottom-content">
-                            <h3>
-                                <a href="#">{x.service}</a>
-                            </h3>
-                            <p>Click the button below for this service.</p>
-
-                            <Link to="/user/dashboard" class="default-btn">
-                                Continue
-                            </Link>
-                        </div>
+                    <Link to={'/user/dashboard'}>  <div class="single-services box card-bg top-content">
+                       <img src={x.img} height={100} />
+                        </div>  
+                        </Link>                    
                     </div>
                 </div>
     )}
 
+</div> 
             </div>
-        </div>
     </section>;
       }
-}
+      export default OurServices;

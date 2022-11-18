@@ -9,7 +9,6 @@ return <>
 <TopHeader/>
 <Outlet/>
 <Footer/>
-<Copyright/>
 </>
 
 }

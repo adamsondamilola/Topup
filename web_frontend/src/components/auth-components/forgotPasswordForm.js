@@ -82,19 +82,28 @@ const ForgotPasswordForm = () => {
     }
 
     
-    return <div class="container">
-        <div class="row justify-content-center text-center d-flex">
-            
-            <div class="col-lg-6">
-                <div class="user-form-content">
-
-                    <form>
+    return <div class="container card">
+        <div class=" justify-content-center text-center d-flex">
+          
                         <div class="row">
 
+                        <div class="col-md-12 mt-3">
+                        <div class="text-center section_title">
+			<p class="sec_small_title text-custom font-weight-bold mb-1">Forgot Password</p>
+			<h3 class="font-weight-bold mb-0">Reset your password</h3>
+			<div class="section_title_border">
+			<div class="f-border"></div>
+			<div class="f-border"></div>
+			<div class="s-border"></div>
+			<div class="f-border"></div>
+			<div class="f-border"></div>
+			</div>
+            </div>
+                        </div>
                             {requestState ? 
                             <>
                             <SuccessMessage message={successMsg}/>
-                             <div class="col-12 mt-3">
+                             <div class="col-md-12 mt-3">
                                 <div class="form-group">
                                     <label>Code</label>
                                     <input class="form-control" type="email"
@@ -103,7 +112,7 @@ const ForgotPasswordForm = () => {
                                 </div>
                             </div>
 
-                            <div class="col-12 mt-3">
+                            <div class="col-md-6 mt-3">
                                 <div class="form-group">
                                     <label>Password</label>
                                     <input class="form-control" 
@@ -113,7 +122,7 @@ const ForgotPasswordForm = () => {
                                 </div>                                
                             </div>
 
-                            <div class="col-12 mt-3">
+                            <div class="col-md-6 mt-3">
                                 <div class="form-group">
                                     <label>Confirm Password</label>
                                     <input 
@@ -125,9 +134,9 @@ const ForgotPasswordForm = () => {
                             </div>
 
                             {errMsg != null? <ErrorMessage message={errMsg}/> : null  }
-                            <div class="col-12 mt-3">                            
+                            <div class="col-md-12 mt-3">                            
                                 {isLoading? <LoadingImage /> :
-                                <button class="default-btn register" onClick={() => confirmRequestReset()} type="button">
+                                <button class="btn btn-success btn-block" onClick={() => confirmRequestReset()} type="button">
                                 Confirm Password Reset
                             </button>
                             }
@@ -137,7 +146,7 @@ const ForgotPasswordForm = () => {
                             :
                             
                             <>
-                            <div class="col-12 mt-3">
+                            <div class="col-md-12 mt-3">
                                 <div class="form-group">
                                     <label>Username or Email</label>
                                     <input class="form-control" type="email"
@@ -146,9 +155,9 @@ const ForgotPasswordForm = () => {
                                 </div>
                             </div>
                             {errMsg != null? <ErrorMessage message={errMsg}/> : null  }
-                            <div class="col-12 mt-3">                            
+                            <div class="col-md-12 mt-3">                            
                                 {isLoading? <LoadingImage /> :
-                                <button class="default-btn register" onClick={() => requestReset()} type="button">
+                                <button class="btn btn-success btn-block" onClick={() => requestReset()} type="button">
                                 Reset Password
                             </button>
                             }
@@ -158,18 +167,12 @@ const ForgotPasswordForm = () => {
                             }
 
                             <div class="col-12"><br/><br/><br/>
-                                <p class="create">Remember password? 
+                                <p class="create">Remembered password? 
                                 <Link to="/login"> Login </Link></p>
                             </div>
                         </div>
-                    </form>
-                </div>
-            </div>
-            <div class="col-lg-12">
-
-            </div>
         </div>
-    </div>;
+    </div>
       }
 
       export default  ForgotPasswordForm; 

@@ -2,10 +2,9 @@ import LoginForm from "../../../auth-components/login";
 import PageTitleArea from "../../pageTitleArea";
 
 const Login = () => {    
-    return <>
-     <PageTitleArea title="Login"/>
+    return <section className="section bg-funfact">
      <LoginForm/>
-    </>
+    </section>
     
     }
     

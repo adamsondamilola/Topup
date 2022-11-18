@@ -12,14 +12,7 @@ import { BrowserRouter as Router,Routes, Route, Link } from 'react-router-dom';
                     </p>
                 </div>
                 <div class="col-lg-6">
-                    <ul>
-                        <li>
-                            <Link to="/privacy-policy">Privacy policy</Link>
-                        </li>
-                        <li>
-                            <Link to="/terms-conditions">Terms conditions</Link>
-                        </li>
-                    </ul>
+                    
                 </div>
             </div>
         </div>

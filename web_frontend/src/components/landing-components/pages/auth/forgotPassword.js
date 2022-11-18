@@ -3,10 +3,9 @@ import PageTitleArea from "../../pageTitleArea";
 
 
 const ForgotPassword = () => {    
-    return <>
-     <PageTitleArea title="Forgot Password"/>
+    return <section class="section bg-funfact" id="forgot">
      <ForgotPasswordForm/>
-    </>
+    </section>
     
     }
     

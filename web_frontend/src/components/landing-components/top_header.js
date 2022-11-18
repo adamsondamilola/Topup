@@ -7,13 +7,21 @@ const TopHeader = () => {
 	const [token, setToken] = useState(localStorage.getItem('loginToken'));
 	const [navClicked, setNavClicked] = useState(localStorage.getItem('navClicked'));
 	const [mobileNav, setMobileNav] = useState(false);
+	const [expand, setExpand] = useState(false);
+	const [collapse, setCollapse] = useState("navbar-collapse collapse");
 
-	const clickMobileNav = () =>{
-		if(mobileNav) setMobileNav(false)
-		else setMobileNav(true)
+	const clickNav = () =>{
+		if(expand == true){
+			setExpand(false)
+			setCollapse("navbar-collapse collapse")
+		} 
+		else {
+			setExpand(true)
+			setCollapse("navbar-collapse collapse show")
+		}
 	}
 
-	   const [maintain, setMaintain] = useState(null);
+	const [maintain, setMaintain] = useState(null);
     const [title, setTitle] = useState(null);
     const [subTitle, setSubTitle] = useState(null);
     const [logo, setLogo] = useState(null);
@@ -58,197 +66,60 @@ const TopHeader = () => {
 	
    
 	return (
+		<nav class="navbar navbar-expand-lg fixed-top custom-nav sticky">
+<div class="container">
 
-            <header class="header-area header-area-style-three">
+<a class="logo navbar-brand" href="/">
+<img src={logoUrl} alt="" class="img-fluid logo-light" />
+<img src={logoUrl} alt="" class="img-fluid logo-dark" />
+</a>
+<button onClick={()=>clickNav()} class="navbar-toggler" 
+type="button" data-toggle="collapse" 
+data-target="#navbarCollapse" 
+aria-controls="navbarCollapse" 
+aria-expanded={expand} 
+aria-label="Toggle navigation">
+<i class="mdi mdi-menu"></i>
+</button>
+<div class={collapse} id="navbarCollapse">
+<ul onClick={()=>clickNav()} class="navbar-nav ml-auto navbar-center" id="mySidenav">
 
-			<div class="top-header">
-				<div class="container">
-					<div class="row align-items-center">
-						<div class="col-lg-6 col-md-6">
-							<ul class="header-left-content">
-								<li>
-									<a className="text-white" href="tel:+2349124812588">
-										<i class="ri-phone-fill"></i>
-										Hotline:+{websitePhone}
-									</a>
-								</li>
-							</ul>
-						</div>
-
-						<div class="col-lg-6 col-md-6">
-							<div class="header-right-content">
-							<div class="my-account text-white">
-									<b>{rcNumber}</b>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-
-			{/*******************/}
-			<div class="navbar-area">
-                <div class="mobile-responsive-nav">
-                    <div class="container">
-                        <div class="mobile-responsive-menu mean-container">
-						<div class="mean-bar">
-							<a onClick={()=>clickMobileNav()} href="#nav" class={mobileNav? `meanmenu-reveal meanclose` : `meanmenu-reveal`} style={{right:0}}><span><span><span></span></span></span></a><nav class="mean-nav">
-                                <ul class="navbar-nav m-auto" style={{display: mobileNav? `block` : `none`}}>
-								<li class="nav-item">
-										<Link onClick={() => clickMobileNav()} to="/" class="nav-link">
-											Home 
-											<i class="ri-arrow-down-s-line"></i>
-										</Link>
-										</li>
-										<li class="nav-item">
-									<Link onClick={() => clickMobileNav()} to="/about" class="nav-link">About</Link>
-								</li>
-										<li class="nav-item">
-									<Link to="/faq" class="nav-link">FAQ</Link>
-								</li>
-								{/*<li class="nav-item">
-									<Link onClick={() => clickMobileNav()} to="/packages" class="nav-link">Packages</Link>
-								</li>
-								<li class="nav-item">
-									<Link onClick={() => clickMobileNav()} to="/incentives" class="nav-link">Incentives</Link>
-								</li>*/}
-								<li class="nav-item">
-									<Link onClick={() => clickMobileNav()} to="/contact" class="nav-link">Contact</Link>
-								</li>
-
-
-{/* 
-								    <li class="nav-item">
-										<a href="#" class="nav-link">
-											Blog 
-											<i class="ri-arrow-down-s-line"></i>
-										</a>
-
-                                        <ul class="dropdown-menu" style={{display: `none`}}>
-                                            <li class="nav-item">
-												<a href="blog.html" class="nav-link">Blog</a>
-											</li>
-                                            <li class="nav-item">
-												<a href="blog-details.html" class="nav-link">Blog details</a>
-											</li>
-                                        </ul>
-                                    <a class="mean-expand" href="#" style={{fontSize: `18px`}}>+</a>
-									</li> */}
-
-                                </ul>
-
-                                
-                            </nav></div>
-
-                            <div class="logo">
-                                <a href="/">
-									<img src={logoUrl} alt="logo" />
-								</a>
-                            </div>
-
-							<div class="others-options-for-mobile-devices">
-								<ul>
-								{token === null ? 
-								<ul>	
-									<li>
-										<Link to='/register'>Register</Link>
-									</li>
-									<li>
-										<Link to='/login'>Login</Link>
-									</li>
-									</ul>
-									: 
-									<ul>
-									<li>
-										<a href='/user/dashboard'>Dashbaord</a>
-									</li>
-
-									</ul>
-									}
-								</ul>
-							</div>
-                        </div>
-                    </div>
-                </div>
-
-				<div class="desktop-nav">
-                    <div class="container">
-                        <nav class="navbar navbar-expand-md navbar-light">
-                            <a class="navbar-brand" href="/">
-							<img src={logoUrl} alt="logo" />
-                            </a>
-
-                            <div class="collapse navbar-collapse mean-menu" id="navbarSupportedContent">
-                                
-							{token === null ? 
-								<ul class="navbar-nav m-auto">
-								<li class="nav-item">
-									<Link to="/" class="nav-link active">
+<li class="nav-item">
+									<Link to="/#" class="nav-link active">
 										Home 
 									</Link>
 								</li>
 								<li class="nav-item">
-									<Link to="/about" class="nav-link">About</Link>
+								<a href="/#about" class="nav-link">About</a>
 								</li>
 								<li class="nav-item">
-									<Link to="/faq" class="nav-link">FAQ</Link>
+									<a href="/#services" class="nav-link">Services</a>
 								</li>
-								{/* <li class="nav-item">
-									<Link to="/packages" class="nav-link">Packages</Link>
+								<li class="nav-item">
+								<a href="/#faq" class="nav-link">FAQ</a>
 								</li>
-								 <li class="nav-item">
-									<Link to="/incentives" class="nav-link">Incentives</Link>
-								</li> */}
 								<li class="nav-item">
 									<Link to="/register" class="nav-link">Register</Link>
 								</li>
+								{token === null ? 
+								<>
 								<li class="nav-item">
 									<Link to="/login" class="nav-link">Login</Link>
 								</li>
-								<li class="nav-item">
-									<Link to="/contact" class="nav-link">Contact</Link>
-								</li>
-							</ul>
-
-									: 
-									
-									<ul class="navbar-nav m-auto">
-									<li class="nav-item">
-										<Link to="/" class="nav-link active">
-											Home 
-										</Link>
-									</li>
-                                    <li class="nav-item">
-										<Link to="/faq" class="nav-link">FAQ</Link>
-									</li>
-									<li class="nav-item">
-									<Link to="/about" class="nav-link">About</Link>
-								</li>
-                                   {/* <li class="nav-item">
-									<Link to="/packages" class="nav-link">Packages</Link>
-								</li>
-								 <li class="nav-item">
-									<Link to="/incentives" class="nav-link">Incentives</Link>
-								</li> */}
+								</>
+								:
 								<li class="nav-item">
 										<a href="/user/dashboard" class="nav-link">Dashbaord</a>
 									</li>
-                                    <li class="nav-item">
-										<Link to="/contact" class="nav-link">Contact</Link>
-									</li>
-                                </ul>
+									
+								}
 
-									}
-                            </div>
-                        </nav>
-                    </div>
-				</div>
+</ul>
+</div>
+</div>
+</nav>
 
-            </div>
-			{/*******************/}
-
-</header>
-        )
+)
       }
 	  
 	  export default TopHeader

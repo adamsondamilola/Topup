@@ -74,17 +74,28 @@ window.location.replace("/user/dashboard");
                     .finally(() => setLoading(false));
     }
 
-        return <div class="container bg-white">
+        return <div class="container card">
         <div class="row justify-content-center text-center d-flex">
             
             <div class="col-lg-6">
                 <div class="user-form-content">
 
-             
                     {successMsg == null ?
                         <div class="row">
-
-                            <div class="col-12 mt-3">
+ <div class="col-md-12 mt-3">
+                        <div class="text-center section_title">
+			<p class="sec_small_title text-custom font-weight-bold mb-1">Sign In</p>
+			<h3 class="font-weight-bold mb-0">Login if you are an existing user</h3>
+			<div class="section_title_border">
+			<div class="f-border"></div>
+			<div class="f-border"></div>
+			<div class="s-border"></div>
+			<div class="f-border"></div>
+			<div class="f-border"></div>
+			</div>
+            </div>
+                        </div>
+                            <div class="col-md-12 mt-3">
                                 <div class="form-group">
                                     <label>Username or Email</label>
                                     <input class="form-control" 
@@ -94,7 +105,7 @@ window.location.replace("/user/dashboard");
                                 </div>
                             </div>
 
-                            <div class="col-12 mt-3">
+                            <div class="col-md-12 mt-3">
                                 <div class="form-group">
                                     <label>Password</label>
                                     <input class="form-control" 
@@ -107,9 +118,9 @@ window.location.replace("/user/dashboard");
                             
                             {errMsg != null? <ErrorMessage message={errMsg}/> : null  }
 
-                            <div class="col-12 mt-3">                            
+                            <div class="col-md-12 mt-3">                            
                                 {isLoading? <LoadingImage /> :
-                                <button class="default-btn register" onClick={() => loginAction()} type="button">
+                                <button class="btn btn-success btn-block" onClick={() => loginAction()} type="button">
                                 Log In
                             </button>
                             }
@@ -133,7 +144,7 @@ window.location.replace("/user/dashboard");
 
             </div>
         </div>
-    </div>;
+    </div>
       }
 
       export default LoginForm;

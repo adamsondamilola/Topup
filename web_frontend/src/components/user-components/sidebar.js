@@ -231,6 +231,13 @@ const  handleLinkClick = () => {
                       </li>
 
                       <li>
+                      <Link  onClick={() => handleLinkClick()} to="/user/request_printer">
+                        <i data-feather="printer"></i>
+                        <span>Request Printer</span>
+                      </Link>
+                      </li>
+
+                      <li>
                       <Link  onClick={() => handleLinkClick()} to="/user/api">
                         <i data-feather="link"></i>
                         <span>APIs</span>

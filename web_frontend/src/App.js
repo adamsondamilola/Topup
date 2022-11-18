@@ -57,6 +57,7 @@ import ViewGeneratedAirtimePublic from "./components/recharge/viewGeneratedAirti
 import ContactUs from "./components/landing-components/pages/contact";
 import NavPages from "./components/landing-components/NavPages";
 import AboutUs from "./components/landing-components/pages/aboutUs";
+import PrinterRequest from "./components/user-components/printerRequest";
 //import ContactUs from "./components/landing-components/pages/contact";
 
 
@@ -121,6 +122,7 @@ function App() {
          <Route path="/user/api" element={<Api />} />
          <Route path="/user/manage_airtime" element={<ManageAirtime />} />
          <Route path="/user/add_airtime" element={<AddAirtimePin />} />
+         <Route path="/user/request_printer" element={<PrinterRequest />} />
         {/*<Route path="/user/presentation" element={<Presentation />} />*/}
         <Route path="/user/browser_not_supported" element={<BrowserNotSupported />} />
         <Route path="*" element={<ComingSoon />} />

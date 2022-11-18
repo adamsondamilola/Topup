@@ -117,19 +117,14 @@ function selectQuestion(id){
 
         return <section class="faq-area bg-color-e9f7fe ptb-100">
         <div class="container">
-            <div class="section-title">
-                <h2>Find answers to your questions</h2>
-            </div>
-
             <div class="faq-accordion">
                 <ul class="accordion">
                   {faqList.map(x =>
                     <li onClick={() => selectQuestion(x.id)} class="accordion-item">
                         <a className={"accordion-title"} href="javascript:void(0)">
                             <i class="fa fa-circle"></i>
-                             {x.question}
+                            <h3 class="font-weight-bold mb-0">{x.question}</h3>
                         </a>
-
                         <div style={{display: selectedId == x.id? `block` : `none` }} className={"accordion-content"}>
                             <div className='col-12 m-10'>
                             <p>{x.answer}</p>
@@ -139,12 +134,6 @@ function selectQuestion(id){
                     )}
 </ul>
 
-                <div class="shape shape-1">
-                    <img src="assets/images/faq-shape.png" alt="Image" />
-                </div>
-                <div class="shape shape-2">
-                    <img src="assets/images/faq-shape.png" alt="Image" />
-                </div>
             </div>
         </div>
     </section>;
