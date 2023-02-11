@@ -33,6 +33,10 @@ const Api = () => {
         alert("Copied!")
       }
 
+      const downloadApiDoc = () =>{
+return window.location = urls.apiroot+'Topup_API.pdf';
+      }
+
     const getUserDetails = () => {
         setLoading(true)
         fetch(urls.apiurl +'user/'+ token+'/user_details/')
@@ -77,6 +81,9 @@ const Api = () => {
         setErrMsg(null)
         setSuccessMsg(null)
         setLoading(true)
+
+        if(window.confirm('Do you want to create new API Key?')){
+               
     
         const postOptions = {
             method: 'POST',
@@ -108,6 +115,10 @@ const Api = () => {
                     })
                     .catch((error) => console.error(error))
                     .finally(() => setLoading(false));
+
+                }else{
+                    setLoading(false)
+                  }
     }
 
 
@@ -164,8 +175,14 @@ const Api = () => {
                           <button class="btn btn-primary" onClick={() => createApiAction()} type="button">
                           Create New API
                       </button>
-                      }
+                      }                      
                       </div>
+
+                      <div class="col-12 mt-3">   
+<button class="btn btn-danger" onClick={() => downloadApiDoc()} type="button">
+<i className='fa fa-download'></i> View/Download API Document
+</button>
+</div>
 
                       </div>
 

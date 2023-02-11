@@ -13,6 +13,7 @@ import LoadVoucher from "./components/wallet-components/loadVoucher";
 import Transactions from "./components/wallet-components/transactions";
 import UserTemplateLayout from "./components/user-components/userTemplateLayout";
 import Wallet from "./components/wallet-components/wallet";
+
 import API from "./components/landing-components/pages/api";
 import ForgotPassword from "./components/landing-components/pages/auth/forgotPassword";
 import Login from "./components/landing-components/pages/auth/login";
@@ -21,6 +22,10 @@ import FAQ from "./components/landing-components/pages/faq";
 import Home from './components/landing-components/pages/home';
 import Layout from "./components/landing-components/pages/layout";
 import PageNotFound from "./components/landing-components/pages/pageNotFound";
+import ContactUs from "./components/landing-components/pages/contact";
+import NavPages from "./components/landing-components/NavPages";
+import AboutUs from "./components/landing-components/pages/aboutUs";
+
 import UpgradePackage from "./components/user-components/upgrade";
 import VerifyTransaction from "./components/wallet-components/verityTransaction";
 import Referrals from "./components/networking-components/referrals";
@@ -54,9 +59,7 @@ import Api from "./components/api-components/Api";
 import ManageAirtime from "./components/recharge/ManageAirtime";
 import AddAirtimePin from "./components/recharge/AddAirtimePin";
 import ViewGeneratedAirtimePublic from "./components/recharge/viewGeneratedAirtimePublic";
-import ContactUs from "./components/landing-components/pages/contact";
-import NavPages from "./components/landing-components/NavPages";
-import AboutUs from "./components/landing-components/pages/aboutUs";
+
 import PrinterRequest from "./components/user-components/printerRequest";
 //import ContactUs from "./components/landing-components/pages/contact";
 

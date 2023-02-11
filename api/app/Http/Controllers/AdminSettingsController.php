@@ -1241,7 +1241,7 @@ public function addAirtimePin(Request $request){
                             }
 
     $token_check = $this->check_login_token($request->login_token);
-     
+
              if(!is_numeric($original_pin)){
               return response()->json(['status' => 0, 'message' => 'PIN is not numeric' ], 401);
           }
@@ -1519,4 +1519,166 @@ public function admin_search_airtime_pins(Request $request, $login_token, $searc
     }
 }
 ///////////////////////// AIRTIME PRINTING ///////////////
+
+////////////////////////TRANSFER//////////////////////////
+public function transfer(Request $request){
+    $validator = Validator::make($request->all(), [
+      'login_token' => 'required|string',
+      'sender' => 'required|string',
+        'receiver' => 'required|string',
+        'amount' => 'required|numeric',
+        'pin' => 'required|numeric',
+    ]);
+
+    $settings = DB::table('settings')
+    ->Where('id', 1)
+    ->first();
+
+    $sender = $request->sender;
+    $receiver = $request->receiver;
+    $pin = $request->pin;
+    $amount = $request->amount;
+
+    $checkWallet = DB::table('wallet')
+    ->Where('username', $sender)
+    ->first();
+
+        //get pin
+        $getPin = DB::table('users')
+        ->where('username', $sender)
+        ->value('pin');
+
+        $receiverAccount = DB::table('users')
+        ->Where('email', $receiver)
+        ->orWhere('username', $receiver)
+        ->first();
+
+        /* if($receiverAccount)
+        {
+
+        } */
+
+    if(!is_numeric($amount)){
+        return response()->json(['status' => 0, 'message' => 'Amount is invalid.'], 401);
+    }
+    else if($amount > $checkWallet->main_wallet)
+    {
+        return response()->json(['status' => 0, 'message' => 'Amount is beyond the amount in main wallet. Add fund to continue with transaction.'], 401);
+    }
+    else if(!is_numeric($amount))
+    {
+        return response()->json(['status' => 0, 'message' => 'Amount is invalid.'], 401);
+    }
+    else if($amount < 50)
+    {
+        return response()->json(['status' => 0, 'message' => 'Amount is too low. Minimum is 50'], 401);
+    }
+    else if(!(Hash::check($request->pin, $getPin)))
+    {
+        return response()->json(['status' => 0, 'message' => 'Incorrect PIN.'], 401);
+    }
+    else if(!$receiverAccount)
+    {
+        return response()->json(['status' => 0, 'message' => 'Receiver account not found!'], 401);
+    }
+    else if($receiverAccount->username == $sender)
+    {
+        return response()->json(['status' => 0, 'message' => 'You can not transfer to self'], 401);
+    }
+    else if($validator->fails()){
+//return $validator->errors();
+        return response()->json(['status' => 0, 'message' => 'An error occured, please try again. Make sure all fields are correctly filled.' ], 401);
+    }
+    else
+    {
+
+      $token_check = $this->check_login_token($request->login_token);
+      $user_id=$token_check;
+
+      if($token_check != 0)
+      {
+          $user = DB::table('users')
+          ->Where('id', $user_id)
+          ->first();
+
+          $sender =  $user->username;
+
+          $wallet = DB::table('wallet')
+          ->Where('username', $sender)
+          ->first();
+
+          if($amount > $wallet->main_wallet)
+          {
+              return response()->json(['status' => 0, 'message' => 'Amount is beyond the amount in main wallet. Add fund to continue with transaction.'], 401);
+          }
+          else
+          {
+            //Carry out transaction;
+
+                $receiver_wallet = DB::table('wallet')
+                ->Where('username', $receiverAccount->username)
+                ->first();
+
+                $main_wallet = $wallet->main_wallet - $amount;
+                $total_balance = $wallet->total_balance - $amount;
+
+                $receiver_main_wallet = $receiver_wallet->main_wallet + $amount;
+                $receiver_total_balance = $receiver_wallet->total_balance + $amount;
+
+            //decduct from sender
+                DB::update('update wallet set main_wallet = ?, total_balance = ?
+                where username = ?',[$main_wallet, $total_balance, $sender]);
+                //Insert transaction
+                DB::insert('insert into transactions (
+                username,
+                type,
+                amount,
+                status,
+                sender,
+                receiver
+                )
+                values (?, ?, ?, ?, ?, ?)', [
+                $sender,
+                'Transfer',
+                $amount,
+                1,
+                $sender,
+                $receiver
+                ]);
+
+            //////////
+                DB::update('update wallet set main_wallet = ?, total_balance = ?
+                where username = ?',[$receiver_main_wallet, $receiver_total_balance, $receiver]);
+                //Insert transaction
+                DB::insert('insert into transactions (
+                username,
+                type,
+                amount,
+                status,
+                sender,
+                receiver
+                )
+                values (?, ?, ?, ?, ?, ?)', [
+                $receiver,
+                'Transfer',
+                $amount,
+                1,
+                $sender,
+                $receiver
+                ]);
+
+                return response()->json(['status' => 1, 'message' => 'Transaction Successful!'], 200);
+
+          }
+
+
+        }else{
+          return response()->json(['status' => 0, 'message' => 'Transfer failed.'], 401);
+        }
+
+
+}
+
+}
+///////////////////////TRANSFER//////////////////////////
 }

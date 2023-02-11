@@ -23,7 +23,7 @@ class WhatsAppCloudController extends Controller
   private $recipientType = "individual";
   private $businessId = "432041555402309";
   private $phoneNumberId = "105974352248264";
-  private $accessToken = "EAAWLn07CoDgBAChpLa9OkX2cxVttArkyISZBYP7WfD2RKnDln5p0r9jst3WnA0tc5LKbs4WzwBBOFVGKjcyYSTTA7alQZBLeKq6L7FplWK1giaE2QwABHXmNobdLnIsagUCGF8NYPR9aXavNAwRpBaZCwZBr2NEUiZBXbMM5JPR2Ss9klwtPL";
+  private $accessToken = "EAAWLn07CoDgBAMAmtgYea2a8yZC2mAZC1dduZAu6TBuOLbWPPsgPyiZBH3e0OTcZBCA06203eyLB2i4wad4XiXWebMQzGqiJrP006hHHiVDWldxWubZAO19Lc6et8rMEglJsiZAM0yZBf1Otvxjo2x3BBeTmZBvaCm0OAjZADLU5dQt3GiZAL7qlZCjMSmFDBDHmcn89QgpPgW8iogZDZD";
   private $wABAId = "105830162263209"; //Whatsapp business account ID
 
   public function sendMail($subject, $to, $from, $msg)

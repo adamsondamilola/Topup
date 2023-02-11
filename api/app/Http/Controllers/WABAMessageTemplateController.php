@@ -209,10 +209,10 @@ $url = $this->topUpDomainApi2."flutterwave/reserveFlutterwaveAccount";
       {
 
           $data = [
-              "network" => $network,
-              'amount' => $amount,
-              'phone' => $beneficiary,
-              'token' => $token
+            "network" => $network,
+            'amount' => $amount,
+            'phone' => $beneficiary,
+            'token' => $token
           ];
 
           //last vtu order

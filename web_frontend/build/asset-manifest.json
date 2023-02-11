@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/static/css/main.073c9b0a.css",
-    "main.js": "/static/js/main.bad7436c.js",
+    "main.js": "/static/js/main.125ac0af.js",
     "static/js/787.24ee0ee7.chunk.js": "/static/js/787.24ee0ee7.chunk.js",
     "static/media/recharge_card_rate.mp4": "/static/media/recharge_card_rate.cdc10f4ba8043abb28be.mp4",
     "static/media/voicesms.png": "/static/media/voicesms.d34e3a0c0c3c3b79575a.png",
@@ -35,11 +35,11 @@
     "static/media/mtn_logo.png": "/static/media/mtn_logo.7e5128e83a194e1da046.png",
     "index.html": "/index.html",
     "main.073c9b0a.css.map": "/static/css/main.073c9b0a.css.map",
-    "main.bad7436c.js.map": "/static/js/main.bad7436c.js.map",
+    "main.125ac0af.js.map": "/static/js/main.125ac0af.js.map",
     "787.24ee0ee7.chunk.js.map": "/static/js/787.24ee0ee7.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.073c9b0a.css",
-    "static/js/main.bad7436c.js"
+    "static/js/main.125ac0af.js"
   ]
 }

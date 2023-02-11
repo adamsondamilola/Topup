@@ -290,17 +290,21 @@ Route::post('create_api', [ApiController::class, 'CreateNewApiToken']);
                                         Route::post('clubkonnect_print_airtime', [AirtimeRechargeApiController::class, 'clubkonnect_print_airtime']);
                                         Route::post('buy_data', [AirtimeRechargeApiController::class, 'buy_none_sme_data']);
                                         Route::post('mtn_sme_data', [AirtimeRechargeApiController::class, 'mtn_sme_data']);
+                                        Route::post('sme_data', [AirtimeRechargeApiController::class, 'mtn_sme_data']);
                                         Route::get('get_data_billing', [AirtimeRechargeApiController::class, 'getDataBillingList']);
+                                        Route::get('data_codes', [AirtimeRechargeApiController::class, 'getDataBillingList']);
                                         Route::get('{login_token}/{id}/get_airtime_details', [AirtimeRechargeApiController::class, 'get_airtime_details']);
                                         Route::get('{login_token}/get_airtime_list', [AirtimeRechargeApiController::class, 'get_airtime_list']);
 
                                         Route::post('verify_cable', [CableApiController::class, 'verify_cable_data']);
                                         Route::post('cable_subscription', [CableApiController::class, 'cable_subscription']);
                                         Route::get('get_cable_billing', [CableApiController::class, 'getCableBillingList']);
+                                        Route::get('cable_codes', [CableApiController::class, 'getCableBillingList']);
 
                                         Route::post('verify_meter', [ElectricityBillApiController::class, 'verify_electricity_data']);
                                         Route::post('electricity_subscription', [ElectricityBillApiController::class, 'electricity_subscription']);
                                         Route::get('get_electricity_billing', [ElectricityBillApiController::class, 'getElectricityBillingList']);
+                                        Route::get('electricity_codes', [ElectricityBillApiController::class, 'getElectricityBillingList']);
                                         Route::get('{login_token}/{id}/get_electricity_details', [ElectricityBillApiController::class, 'get_electricity_details']);
                                         Route::get('{login_token}/get_token_list', [ElectricityBillApiController::class, 'get_token_list']);
                                     }
