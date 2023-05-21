@@ -13,6 +13,7 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Input;
 
 use App\Http\Controllers\MailerController;
+use App\Http\Controllers\WhatsAppChatCloudController;
 use App\Http\Controllers\WABAMessageTemplateController;
 
 class WhatsAppCloudController extends Controller
@@ -30,6 +31,18 @@ class WhatsAppCloudController extends Controller
   {
       $mailer = new MailerController;
       $mailer->sendMail($subject, $to, $msg);
+  }
+
+  public function userSendTextMessage($text, $phone, $withUrl)
+  {
+      $chat = new WhatsAppChatCloudController;
+      $chat->userSendTextMessage($text, $phone, $withUrl);
+  }
+
+  public function continueConversation($agent, $text, $phone, $message_id)
+  {
+      $chat = new WhatsAppChatCloudController;
+      $chat->continueConversation($agent, $text, $phone, $message_id);
   }
 
   public function SendTextMessage($text, $phone, $withUrl)
@@ -231,12 +244,31 @@ $checkMsg = DB::table('whatsapp_cloud_messages')
 ->count();
 if($checkMsg < 1)
 {
-  DB::insert('insert into whatsapp_cloud_messages (
-      phone, message, message_id, message_type
-      )
-  values (?, ?, ?, ?)', [
-      $phone, $message, $message_id, "inbound"
-  ]);
+
+//ignite chat
+/*$mg = DB::table('whatsapp_cloud_messages')
+        ->Where('phone', $phone)
+        ->Where('message_type', "outbound")
+        ->orderBy('id', 'desc')
+        ->first()->message;
+ if(str_contains($mg, "Please wait, someone will attend to you shortly."))
+                                            {
+                                                $msg = trim(strtolower($message));
+                                               // if(!$alreadyReplied)
+                                               // {
+                                                $this->userSendTextMessage($msg, $phone, false);
+                                              //  }
+                                            }
+else{*/
+    DB::insert('insert into whatsapp_cloud_messages (
+        phone, message, message_id, message_type
+        )
+    values (?, ?, ?, ?)', [
+        $phone, $message, $message_id, "inbound"
+    ]);
+//}
+
+
 
 }
 
@@ -255,12 +287,21 @@ $whatsapp_user_count = DB::table('whatsapp_cloud_users')
     $alreadyReplied = true;
   }
 
+  //check if user has active chat
+  $last_chat_out = DB::table('whatsapp_cloud_chats')
+      ->Where('phone', $phone)
+      ->Where('message_type', 'outbound')
+      ->Where('message_status', null)
+      ->orderBy('id', 'desc')
+      ->first();
+
   //last response from us
       $last_message_out = DB::table('whatsapp_cloud_messages')
       ->Where('phone', $phone)
       ->Where('message_type', 'outbound')
       ->orderBy('id', 'desc')
       ->first();
+
 
       //last response from us count
           $last_message_out_count = DB::table('whatsapp_cloud_messages')
@@ -679,14 +720,89 @@ $whatsapp_user_count = DB::table('whatsapp_cloud_users')
                                     }
                                   }
 
+                                  else if(trim(strtolower($message)) == "remloans" || trim($message) == "11")
+                                  {
+                                  if(!$alreadyReplied)
+                                  {
+                                    $this->SendTextMessage($messagesRes->remLoans($phone, $name, $message_id), $phone, true);
+                                  }
+                                  }
 
-                                                            else if(trim(strtolower($message)) == "shortcut" || trim($message) == "11")
+                                  else if(trim(strtolower($message)) == "remsolar" || trim($message) == "12")
+                                  {
+                                  if(!$alreadyReplied)
+                                  {
+                                    $this->SendTextMessage($messagesRes->remSolar($phone, $name, $message_id), $phone, true);
+                                  }
+                                  }
+
+                                  else if(trim(strtolower($message)) == "chat" || trim($message) == "13")
+                                  {
+                                  if(!$alreadyReplied)
+                                  {
+                                    $this->SendTextMessage($messagesRes->chatWithUs($phone, $name, $message_id), $phone, false);
+                                  }
+                                  }
+                                   else if(str_contains($last_message_out->message, "let us know what you want to discuss"))
+                                        {
+                                          $msg = trim(strtolower($message));
+                                          if(!$alreadyReplied)
+                                          {
+                                            $this->SendTextMessage($messagesRes->chatAutoResponse($phone, $name, $message_id, $msg), $phone, false);
+                                          }
+                                        }
+
+                                   else if($last_chat_out)
+                                        {
+                                          // save last In message
+                                          if(!$alreadyReplied)
+                                          {
+                                          $this->continueConversation($last_chat_out->conversation_with, $last_message_in->message, $phone, $last_chat_out->message_id);
+                                          }
+
+
+                                        }
+
+                                   else if(str_contains($last_message_out->message, "Message Acknowledge. Please wait"))
+                                        {
+                                          // save last In message
+                                          if(!$alreadyReplied)
+                                          {
+                                          //do something
+                                          }
+
+
+                                        }
+
+
+                                  else if(trim(strtolower($message)) == "contact" || trim($message) == "*")
+                                  {
+                                  if(!$alreadyReplied)
+                                  {
+                                    $this->SendTextMessage($messagesRes->contactUs($phone, $name, $message_id), $phone, false);
+                                  }
+                                  }
+
+
+
+                                                            else if(trim(strtolower($message)) == "shortcut" || trim($message) == "#")
                                                           {
                                                             if(!$alreadyReplied)
                                                             {
                                                               $this->SendTextMessage($messagesRes->shortcutKeys($phone, $name, $message_id), $phone, false);
                                                             }
                                                           }
+
+                                                          else if(trim(strtolower($message)) == "otp")
+                                                          {
+                                                            if(!$alreadyReplied)
+                                                            {
+                                                              $this->SendTextMessage($messagesRes->getRemLoanOtp($phone, $name, $message_id), $phone, false);
+                                                            }
+                                                          }
+
+
+
 
           else
           {

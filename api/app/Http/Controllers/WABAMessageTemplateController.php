@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use App\Http\Controllers\EncryptController;
 use App\Http\Controllers\MailerController ;
+use App\Http\Controllers\WhatsAppChatCloudController;
 
 class WABAMessageTemplateController extends Controller
 {
@@ -18,6 +19,13 @@ class WABAMessageTemplateController extends Controller
   private $topUpDomainApi = "https://api.topupearn.com/api/v1/";
   private $topUpDomainApi2 = "https://api.topupearn.com/api/";
   private $globalStatus = 0;
+
+
+public function userSendTextMessage($text, $phone, $withUrl)
+  {
+      $chat = new WhatsAppChatCloudController;
+      $chat->userSendTextMessage($text, $phone, $withUrl);
+  }
 
   //create new account
   public function signup($phone, $name, $message_id, $msg)
@@ -745,6 +753,8 @@ $url = $this->topUpDomainApi."recharge/verify_meter";
 
   public function saveMessage($phone, $name, $message, $message_id)
   {
+
+
     DB::insert('insert into whatsapp_cloud_messages (
         phone, name, message, message_id, message_type
         )
@@ -869,17 +879,21 @@ $url = $this->topUpDomainApi."recharge/verify_meter";
   public function responseToGreeting($phone, $name, $message_id)
   {
     $message = "Hi, Thanks for contacting us. Kindly respond with a number associated with the service you need.\n";
-    $message .= "1. *Laundry Service*\n";
-    $message .= "2. *Track Laundry Order*\n";
-    $message .= "3. *Internet Data*\n";
-    $message .= "4. *SME Data*\n";
-    $message .= "5. *Airtime (VTU)*\n";
-    $message .= "6. *Print Airtime*\n";
-    $message .= "7. *Cable TV*\n";
-    $message .= "8. *Electricity Bills*\n";
-    $message .= "9. *Topup Wallet*\n";
-    $message .= "10. *Open Topup Account*\n";
-    $message .= "11. *Shortcuts*\n";
+    $message .= "[1] *Laundry Service*\n";
+    $message .= "[2] *Track Laundry Order*\n";
+    $message .= "[3] *Internet Data*\n";
+    $message .= "[4] *SME Data*\n";
+    $message .= "[5] *Airtime (VTU)*\n";
+    $message .= "[6] *Print Airtime*\n";
+    $message .= "[7] *Cable TV*\n";
+    $message .= "[8] *Electricity Bills*\n";
+    $message .= "[9] *Topup Wallet*\n";
+    $message .= "[10] *Open Topup Account*\n";
+    $message .= "[11] *Rem Loans*\n";
+    $message .= "[12] *Rem Solar*\n";
+    $message .= "[13] *Chat with an Agent*\n";
+    $message .= "[*] *Contact Us*\n";
+    $message .= "[#] *Shortcuts*\n";
 
     $this->saveMessage($phone, $name, $message, $message_id);
 
@@ -899,6 +913,10 @@ $url = $this->topUpDomainApi."recharge/verify_meter";
     $message .= "\n_power_ - *Electricity Bills*";
     $message .= "\n_wallet_ - *Topup Wallet*";
     $message .= "\n_new_ - *Open Topup Account*";
+    $message .= "\n_remloans_ - *Rem Loans*";
+    $message .= "\n_remsolar_ - *Rem Solar*";
+    $message .= "\n_chat_ - *Chat with an Agent*";
+    $message .= "\n_contact_ - *Contact Us*";
     $message .= "\n_shortcut_ - *Shortcut*";
 
     $this->saveMessage($phone, $name, $message, $message_id);
@@ -923,6 +941,77 @@ $url = $this->topUpDomainApi."recharge/verify_meter";
       $this->saveMessage($phone, $name, $message, $message_id);
       return $message;
   }
+
+  //rem loans
+  public function remLoans($phone, $name, $message_id)
+  {
+    $message = "For loan services with low interest rate, kindly click the link below.\n\n";
+    $message .= "https://rm.lsq.app";
+    //$message .= "\n\nYou can also download our App from Apple and Google stores";
+    //$message .= "\n\nAndroid: https://play.google.com/store/apps/details?id=ng.elaundry.laundry&fbclid=IwAR11y3Ao4b5lxR9OZmMVuIzEn6mtMt8FC662IxUA3wf4ckO7PTTBvcwVFa8";
+    //$message .= "\n\niOS: https://apps.apple.com/tt/app/elaundry-nigeria/id1620559074";
+      $this->saveMessage($phone, $name, $message, $message_id);
+      return $message;
+  }
+
+  //rem solar & inverter
+  public function remSolar($phone, $name, $message_id)
+  {
+    $message = "For solar and inverter services, kindly click the link below.\n\n";
+    $message .= "https://remotimes.com/power.html";
+      $this->saveMessage($phone, $name, $message, $message_id);
+      return $message;
+  }
+
+  //Contact us
+  public function contactUs($phone, $name, $message_id)
+  {
+    $message = "For support or more information about our goods and services, kindly write to *support@remotimes.com*.\n\n";
+    $message .= "To chat with a representative, please click the link below or call 09065239991\n\n";
+    $message .= "https://wa.me/2349065239991\n\n";
+    $this->saveMessage($phone, $name, $message, $message_id);
+    return $message;
+  }
+
+//Chat with us
+public function chatWithUs($phone, $name, $message_id)
+{
+  $message = "Please, let us know what you want to discuss.\n\n";
+//  $message = "Please wait, someone will attend to you shortly.\n\n";
+  $this->saveMessage($phone, $name, $message, $message_id);
+  return $message;
+}
+
+public function chatAutoResponse($phone, $name, $message_id)
+{
+    //last response from user
+          $last_message_in = DB::table('whatsapp_cloud_messages')
+          ->Where('phone', $phone)
+          ->Where('message_type', 'inbound')
+          ->orderBy('id', 'desc')
+          ->first();
+
+          if($last_message_in){
+         $insert = DB::insert('insert into whatsapp_cloud_chats (
+            phone,
+            message,
+            message_id,
+            message_type,
+            message_status
+            )
+        values (?, ?, ?, ?, ?)', [
+            $phone,
+            $last_message_in->message,
+            $last_message_in->message_id,
+            "inbound",
+            "Pending"
+        ]);
+        }
+
+  $message = "Message Acknowledge. Please wait, someone will attend to you shortly.\n\n";
+  $this->saveMessage($phone, $name, $message, $message_id);
+  return $message;
+}
 
   public function laundryService($phone, $name, $message_id)
   {
@@ -2014,6 +2103,31 @@ else if(str_contains($last_message_out->message, "You are about to subscribe to 
       return $message;
   }
   //Topup wallet -->
+
+//RemLoanOTP
+public function getRemLoanOtp($phone, $name, $message_id){
+
+    $user = DB::table('rem_users')
+    ->Where('phone', '0'+substr($phone, 3))
+    ->orderBy('id', 'desc')
+   ->first();
+
+   if(!$user || $user == ""){
+    $message = 'Account not found!';
+
+}
+
+else if($user->otp == ""){
+    $message = 'OTP Error';
+}
+else{
+    $message = 'Rem Loan OTP: '.$user->otp;
+}
+
+
+    return $message;
+}
+
 
   public function invalidCommand($phone, $name, $message_id)
   {

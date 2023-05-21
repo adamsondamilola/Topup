@@ -214,7 +214,7 @@ if(num == "0") setEnterAmount(true)
     }
 
     function payWithCard(){
-        getApiKeys()
+        //getApiKeys()
         let tx = RandomString(21);
         setTransactionid(tx)
         setErrMsg(null)

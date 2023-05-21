@@ -90,6 +90,8 @@ import FreeUsersElectricityCommissions from "./components/admin-components/commi
 import PrintAirtimeStats from "./components/recharge/PrintAirtimeStats";
 import ManageAirtime from "./components/recharge/ManageAirtime";
 import AddAirtimePin from "./components/recharge/AddAirtimePin";
+import Chats from "./components/admin-components/Chats";
+import ChatDetails from "./components/admin-components/ChatDetails";
 
 function App() {
   return (
@@ -196,6 +198,8 @@ function App() {
 
         <Route path="/admin/faq" element={<Faqs />} />
         <Route path="/admin/add_faq" element={<AddFaq />} />
+        <Route path="/admin/chats" element={<Chats />} />
+        <Route path="/admin/:id/chat_details" element={<ChatDetails />} />
         <Route path="*" element={<ComingSoon />} />
         </Route>
         

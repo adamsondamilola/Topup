@@ -26,6 +26,7 @@ use App\Http\Controllers\Api\V1\AirtimeRechargeApiController;
 use App\Http\Controllers\Api\V1\DataRechargeApiController;
 use App\Http\Controllers\Api\V1\ElectricityBillApiController;
 use App\Http\Controllers\Api\V1\CableApiController;
+use App\Http\Controllers\Api\V1\RemLoanLendSquareController;
 
 
 
@@ -190,6 +191,13 @@ Route::post('create_api', [ApiController::class, 'CreateNewApiToken']);
                               Route::get('{login_token}/{num}/bank_withdrawal_transactions', [AdminController::class, 'bank_withdrawal_transactions']);
                               Route::get('{login_token}/{id}/{status}/payment_approval', [AdminController::class, 'payment_approval']);
 
+                              Route::get('{login_token}/{chat_type}/chats', [AdminController::class, 'chats']);
+                              Route::get('{login_token}/{phone}/open_chats', [AdminController::class, 'open_chats']);
+                              Route::get('{login_token}/{messageId}/open_chats_by_message_id', [AdminController::class, 'open_chats_by_message_id']);
+                              Route::get('{login_token}/{messageId}/opened_chat_details', [AdminController::class, 'opened_chat_details']);
+                              Route::post('{login_token}/replyChat', [AdminController::class, 'replyChat']);
+
+
                               Route::post('add_airtime_pin', [AdminSettingsController::class, 'addAirtimePin']);
                               Route::get('{login_token}/{num}/airtime_pins', [AdminSettingsController::class, 'airtime_pins']);
                               Route::get('{login_token}/{search}/search_airtime_pins', [AdminSettingsController::class, 'search_airtime_pins']);
@@ -307,6 +315,8 @@ Route::post('create_api', [ApiController::class, 'CreateNewApiToken']);
                                         Route::get('electricity_codes', [ElectricityBillApiController::class, 'getElectricityBillingList']);
                                         Route::get('{login_token}/{id}/get_electricity_details', [ElectricityBillApiController::class, 'get_electricity_details']);
                                         Route::get('{login_token}/get_token_list', [ElectricityBillApiController::class, 'get_token_list']);
+
+
                                     }
                                     );
 
@@ -319,3 +329,18 @@ Route::post('create_api', [ApiController::class, 'CreateNewApiToken']);
                                           Route::get('{login_token}/virtual_account_details', [UsersApiController::class, 'virtual_account_details']);
                                         }
                                         );
+
+                                        Route::group([
+                                            'prefix' => 'v1/remloan'
+                                            ],
+                                            function()
+                                            {
+
+                                                Route::post('onboard_new_user', [RemLoanLendSquareController::class, 'onboardNewUser']);
+                                                Route::post('verify_new_user', [RemLoanLendSquareController::class, 'verifyPhoneNumber']);
+                                                Route::post('save_new_user_location', [RemLoanLendSquareController::class, 'saveNewUserLocation']);
+                                                Route::post('save_new_user_contacts', [RemLoanLendSquareController::class, 'saveNewUserContacts']);
+                                                Route::post('error_logs', [RemLoanLendSquareController::class, 'remErrorLogs']);
+
+                                            }
+                                            );

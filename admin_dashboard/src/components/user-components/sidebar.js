@@ -227,6 +227,13 @@ const  handleLinkClick = () => {
                       </Link>
                       </li>
                    	 
+                      <li>
+                      <Link  onClick={() => handleLinkClick()} to="/admin/chats">
+                        <i className='fa fa-send text-white'></i>
+                        <span>Chat</span>
+                      </Link>
+                      </li>
+                   	 
                       <li class="treeview">
                       <a href="#">
                         <i data-feather="user"></i>

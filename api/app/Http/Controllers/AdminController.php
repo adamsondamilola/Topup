@@ -9,10 +9,18 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 
+use App\Http\Controllers\WhatsAppChatCloudController;
 use App\Http\Controllers\ActivationController;
 
 class AdminController extends Controller
 {
+
+
+    public function agentSendTextMessage($agent, $text, $phone, $message_id)
+    {
+        $chat = new WhatsAppChatCloudController;
+        $chat->agentSendTextMessage($agent, $text, $phone, $message_id);
+    }
 
   public function check_login_token($login_token){
       $token_check = DB::table('login_logs')
@@ -1425,5 +1433,168 @@ public function transactions(Request $request, $login_token, $username){
 }
 */
 
+//whatsapp chatbot.
+
+public function chats(Request $request, $login_token, $chat_type){
+
+    $token_check = $this->check_login_token($login_token);
+    if($token_check != 0)
+    {
+        $user = DB::table('users')
+        ->Where('id', $token_check)
+        ->first();
+
+if($chat_type == "pending")
+{
+    $messages = DB::table('whatsapp_cloud_chats')
+        ->Where('message_status', "Pending")
+        ->orderBy('id', 'desc')
+        ->take(100)
+       ->get()->all();
+
+        return response()->json(['status' => 1,
+        'message' => 'Messages',
+        'result' => $messages], 200);
+
+}
+else if($chat_type == "closed")
+{
+    $messages = DB::table('whatsapp_cloud_chats')
+        ->Where('message_status', "Closed")
+        ->orderBy('id', 'desc')
+        ->take(100)
+       ->get()->all();
+
+        return response()->json(['status' => 1,
+        'message' => 'Messages',
+        'result' => $messages], 200);
+
+}else{
+    $messages = DB::table('whatsapp_cloud_chats')
+        ->Where('message_status', "Replied")
+        ->orderBy('id', 'desc')
+        ->take(100)
+       ->get()->all();
+
+        return response()->json(['status' => 1,
+        'message' => 'Messages',
+        'result' => $messages], 200);
+}
+
+}
+    else
+    {
+        return response()->json(['status' => 0, 'message' => 'Access Denied!'], 401);
+    }
+
+  }
+
+  public function open_chats(Request $request, $login_token, $phone){
+    $token_check = $this->check_login_token($login_token);
+    if($token_check != 0)
+    {
+        $user = DB::table('users')
+        ->Where('id', $token_check)
+        ->first();
+
+        $messages = DB::table('whatsapp_cloud_chats')
+        ->Where('phone', $phone)
+        ->orderBy('id', 'asc')
+        ->take(20)
+       ->get()->all();
+
+        return response()->json(['status' => 1,
+        'message' => 'Messages',
+        'result' => $messages], 200);
+    }
+    else
+    {
+        return response()->json(['status' => 0, 'message' => 'Access Denied!'], 401);
+    }
+
+  }
+
+  public function open_chats_by_message_id(Request $request, $login_token, $messageId){
+    $token_check = $this->check_login_token($login_token);
+    if($token_check != 0)
+    {
+        $user = DB::table('users')
+        ->Where('id', $token_check)
+        ->first();
+
+        $messages = DB::table('whatsapp_cloud_chats')
+        ->Where('message_id', $messageId)
+        ->orderBy('id', 'asc')
+        ->take(20)
+       ->get()->all();
+
+        return response()->json(['status' => 1,
+        'message' => 'Messages',
+        'result' => $messages], 200);
+    }
+    else
+    {
+        return response()->json(['status' => 0, 'message' => 'Access Denied!'], 401);
+    }
+
+  }
+
+  public function opened_chat_details(Request $request, $login_token, $messageId){
+    $token_check = $this->check_login_token($login_token);
+    if($token_check != 0)
+    {
+        $user = DB::table('users')
+        ->Where('id', $token_check)
+        ->first();
+
+        $messages = DB::table('whatsapp_cloud_chats')
+        ->Where('message_id', $messageId)
+        ->orderBy('id', 'asc')
+        ->first();
+
+        return response()->json(['status' => 1,
+        'message' => 'Messages',
+        'result' => $messages], 200);
+    }
+    else
+    {
+        return response()->json(['status' => 0, 'message' => 'Access Denied!'], 401);
+    }
+
+  }
+
+  public function replyChat(Request $request, $login_token){
+
+    $validator = Validator::make($request->all(), [
+        'phone' => 'required|string|max:20',
+        'message' => 'required|string|min:1|max:1000',
+        'message_id' => 'required|string|min:1|max:1000',
+                 ]);
+
+              if($validator->fails())
+                {
+                    return response()->json(['status' => 0, 'message' => 'An error occured, please try again. Make sure all fields are correctly filled.' ], 401);
+                }
+else{
+    $token_check = $this->check_login_token($login_token);
+    if($token_check != 0)
+    {
+        $user = DB::table('users')
+        ->Where('id', $token_check)
+        ->first();
+
+        $this->agentSendTextMessage($user->username, $request->message, $request->phone, $request->message_id);
+
+        return response()->json(['status' => 1,
+        'message' => 'Messages sent',
+        'result' => $request->message], 200);
+    }
+    else
+    {
+        return response()->json(['status' => 0, 'message' => 'Access Denied!'], 401);
+    }
+
+}
+  }
 
 }

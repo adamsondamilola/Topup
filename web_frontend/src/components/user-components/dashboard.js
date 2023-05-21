@@ -76,6 +76,13 @@ const Dashbaord = () => {
         },
         {
             id: 7,
+            service: "PRINT RECEIPT",
+            path: "transactions",
+            subText: "Print Receipt",
+            img: logos.print_airtime 
+        },
+/*        {
+            id: 7,
             service: "BULK SMS",
             path: "send_sms",
             subText: "Send SMS",
@@ -94,7 +101,7 @@ const Dashbaord = () => {
             path: "educational_pins",
             subText: "Purchase",
             img: images.educational 
-        }     
+        }  */   
     ]
     
     const [userData, setUserData] = useState([]);
@@ -436,9 +443,28 @@ const Dashbaord = () => {
                               </div>
                           </div>
                       </div> 
-                      </div>                     
+                      </div>    
+                                      
           </div>
          : '' }
+         <div class="col-xl-12 col-lg-12">
+         <div className='card bg-success'>
+          <div class="box-body text-center">
+                          <div class="d-flex justify-content-around">
+                          <div>
+                          Kindly note that wallet funding greater than 5,000 NGN should be sent to the account details below and use your username or email address as description.
+                          <hr className='bg-white'/>
+                        
+                        <div>
+                              <h6 class="my-0"><span className='text-white'> Union Bank </span></h6>
+                                  <p class="mb-0 text-white">0094914329</p>
+                                  <h6 class="my-0"><span className='text-white'> Remo Times Global </span></h6>
+                               </div>
+                               </div>
+                        </div>
+                        </div>
+                        </div>
+         </div>
 
           {pendingPackage_ ? 
           <div class="col-xl-12 col-lg-12">

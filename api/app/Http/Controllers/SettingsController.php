@@ -16,6 +16,6 @@ class SettingsController extends Controller
     ->get();
     return response()->json(['status' => 1,
     'message' => 'API Keys',
-    'result' => $apis], 200);
+    'result' => []], 200);
   }
 }
